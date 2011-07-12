@@ -1,3 +1,6 @@
 {
-	"use": "global unit test file"
+	"require": "require function tests",
+	"module": "module function tests",
+	"globals": "globals function tests",
+	"define": "define.script and define.alias tests"
 }

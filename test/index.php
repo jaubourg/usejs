@@ -1,22 +1,11 @@
-<?php
-
-	function loadScripts( $scripts ) {
-		echo "\n<script>/*<!--*/\n";
-		foreach( $scripts as $script ) {
-			echo file_get_contents( $script );
-			echo "\n";
-		}
-		echo "/*-->*/</script>";
-	}
-
-?><!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 	<title>usejs Test Suite</title>
 	<link rel="Stylesheet" media="screen" href="qunit/qunit/qunit.css" /><?php
 	
 	$modules = json_decode( file_get_contents( "../build/data/modules.json" ), true );
-	$files = array( "../build/data/intro.js" );
+	$files = array( "init.js", "../build/data/intro.js" );
 	foreach( $modules as $module => $_ ) {
 		array_push( $files, "../src/$module.js" );
 	}
@@ -25,8 +14,13 @@
 	foreach( $modules as $module => $_ ) {
 		array_push( $files, "unit/$module.js" );
 	}
-	loadScripts( $files );
-
+	echo "\n<script>/*<!--*/\n";
+	foreach( $files as $file ) {
+		echo file_get_contents( $file );
+		echo "\n";
+	}
+	echo "/*-->*/</script>";
+	
 ?></head>
 <body id="body">
 	<h1 id="qunit-header"><a href="./index.php">usejs Test Suite</a></h1>
