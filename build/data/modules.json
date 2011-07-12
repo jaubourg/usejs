@@ -1,3 +1,11 @@
 {
-	"use": "unique source file"
+	"utils": "IE detection and general utilities",
+	"dom": "DOM manipulation shortcuts",
+	"future": "Futures and join",
+	"iframe": "IFrame sandboxing logic",
+	"resolve_url": "Resolve URL factory",
+	"module": "Module and loading facility",
+	"define": "Define factory, alias and script bridge",
+	"require": "Require factory",
+	"global": "Global and exposition on global namespace"
 }

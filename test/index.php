@@ -1,26 +1,35 @@
-<!DOCTYPE html>
+<?php
+
+	function loadScripts( $scripts ) {
+		echo "\n<script>/*<!--*/\n";
+		foreach( $scripts as $script ) {
+			echo file_get_contents( $script );
+			echo "\n";
+		}
+		echo "/*-->*/</script>";
+	}
+
+?><!DOCTYPE html>
 <html>
 <head>
 	<title>UseJS Test Suite</title>
-	<link rel="Stylesheet" media="screen" href="qunit/qunit/qunit.css" />
-	<?php
-		$modules = json_decode( file_get_contents( "../build/data/modules.json" ), true );
-		foreach( $modules as $module => $_ ) {
-			?><script src="../src/<?= $module ?>.js"></script><?php
-		}
-	?>
-	<script src="qunit/qunit/qunit.js"></script>
-	<?php
-		$noUnit = array( "vars", "load_module" );
-		foreach( $modules as $module => $_ ) {
-			if ( !in_array( $module, $noUnit ) ) {
-			?><script src="unit/<?= $module ?>.js"></script><?php
-			}
-		}
-	?>
-</head>
+	<link rel="Stylesheet" media="screen" href="qunit/qunit/qunit.css" /><?php
+	
+	$modules = json_decode( file_get_contents( "../build/data/modules.json" ), true );
+	$files = array( "../build/data/intro.js" );
+	foreach( $modules as $module => $_ ) {
+		array_push( $files, "../src/$module.js" );
+	}
+	array_push( $files, "../build/data/outro.js", "qunit/qunit/qunit.js" );
+	$modules = json_decode( file_get_contents( "./units.json" ), true );
+	foreach( $modules as $module => $_ ) {
+		array_push( $files, "unit/$module.js" );
+	}
+	loadScripts( $files );
+
+?></head>
 <body id="body">
-	<h1 id="qunit-header"><a href="./index.html">UseJS Test Suite</a></h1>
+	<h1 id="qunit-header"><a href="./index.php">UseJS Test Suite</a></h1>
 	<h2 id="qunit-banner"></h2>
 	<div id="qunit-testrunner-toolbar"></div>
 	<h2 id="qunit-userAgent"></h2>

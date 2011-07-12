@@ -6,3 +6,4 @@
  *
  * Date: @DATE
  */
+(function( window, document, undefined ) {
