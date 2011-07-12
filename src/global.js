@@ -1,16 +1,14 @@
 var windows = [ window ],
-	resolveURL = resolveURLFactory( document ),
 	global = Module( function( id, value ) {
 		for ( var i = 0, length = windows.length; i < length; i++ ) {
 			windows[ i ][ id ] = value;
 		}
 	}, function( id ) {
 		for ( var i = 0, length = windows.length; i < length; i++ ) {
-			if ( ie ) {
+			try {
 				windows[ i ][ id ] = undefined;
-			} else {
 				delete windows[ i ][ id ];
-			}
+			} catch( e ) {}
 		}
 	});
 

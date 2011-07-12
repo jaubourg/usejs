@@ -1,13 +1,4 @@
-var ie = (function(){
-		var v = 3,
-			div = create( "div" ),
-			all = getByTagName( "i", div );
-		do {
-			div.innerHTML = "<!--[if gt IE " + (++v) + "]><i></i><![endif]-->";
-		} while ( all[ 0 ] );
-		return v > 4 ? v : 0;
-	})(),
-	toString = {}.toString,
+var toString = {}.toString,
 	r_type = /^\[.*? (.*?)\]$/,
 	types = {};
 

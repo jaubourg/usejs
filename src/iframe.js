@@ -4,14 +4,13 @@ var marker = "_" + ( 1 * (new Date()) ),
 		undefined,
 		"\"><script src=\"",
 		undefined,
-		"\"",
-		ie ? " onreadystatechange=\"" + marker + "(this.readyState);\" onerror=\"" + marker + "();\"" : "",
-		"><\/script>",
-		ie ? "" : "<script>" + marker + "();<\/script>"
+		"\"><\/script><script>",
+		marker,
+		"();<\/script>"
 	],
 	r_directory = /[^\/]+$/;
 
-function iframe( url, init, done ) {
+function iframe( url, init, onload ) {
 	iframeCode[ 1 ] = url.replace( r_directory, "" );
 	iframeCode[ 3 ] = url;
 	var win, doc,
@@ -23,11 +22,9 @@ function iframe( url, init, done ) {
 	doc = win.document;
 	doc.open();
 	init( win, resolveURLFactory( doc ) );
-	win[ marker ] = function( readyState ) {
-		if ( done && testReadyState( readyState ) ) {
-			later( done );
-			done = undefined;
-		}
+	win[ marker ] = function() {
+		later( onload );
+		onload = undefined;
 	};
 	doc.write( code );
 	doc.close();
