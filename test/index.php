@@ -12,7 +12,7 @@
 ?><!DOCTYPE html>
 <html>
 <head>
-	<title>UseJS Test Suite</title>
+	<title>usejs Test Suite</title>
 	<link rel="Stylesheet" media="screen" href="qunit/qunit/qunit.css" /><?php
 	
 	$modules = json_decode( file_get_contents( "../build/data/modules.json" ), true );
@@ -29,7 +29,7 @@
 
 ?></head>
 <body id="body">
-	<h1 id="qunit-header"><a href="./index.php">UseJS Test Suite</a></h1>
+	<h1 id="qunit-header"><a href="./index.php">usejs Test Suite</a></h1>
 	<h2 id="qunit-banner"></h2>
 	<div id="qunit-testrunner-toolbar"></div>
 	<h2 id="qunit-userAgent"></h2>

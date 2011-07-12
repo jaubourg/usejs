@@ -26,7 +26,7 @@ DATE=$(shell git log -1 --pretty=format:%ad)
 all: update_submodules core
 
 core: use min lint
-	@@echo "UseJS build complete."
+	@@echo "usejs build complete."
 
 ${DIST_DIR}:
 	@@mkdir -p ${DIST_DIR}
@@ -42,22 +42,22 @@ ${USE}: ${MODULES} | ${DIST_DIR}
 
 lint: use
 	@@if test ! -z ${JS_ENGINE}; then \
-		echo "Checking UseJS against JSLint..."; \
+		echo "Checking usejs against jslint..."; \
 		${JS_ENGINE} build/jslint-check.js; \
 	else \
-		echo "You must have NodeJS installed in order to test UseJS against JSLint."; \
+		echo "You must have nodejs installed in order to test usejs against jslint."; \
 	fi
 
 min: use ${USE_MIN}
 
 ${USE_MIN}: ${USE}
 	@@if test ! -z ${JS_ENGINE}; then \
-		echo "Minifying UseJS" ${USE_MIN}; \
+		echo "Minifying usejs" ${USE_MIN}; \
 		${COMPILER} ${USE} > ${USE_MIN}.tmp; \
 		${POST_COMPILER} ${USE_MIN}.tmp > ${USE_MIN}; \
 		rm -f ${USE_MIN}.tmp; \
 	else \
-		echo "You must have NodeJS installed in order to minify UseJS."; \
+		echo "You must have nodejs installed in order to minify usejs."; \
 	fi
 	
 
