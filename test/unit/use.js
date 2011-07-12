@@ -48,6 +48,15 @@ test( "require - multiple modules", function() {
 	});
 });
 
+test( "module", function() {
+	expect( 1 );
+	stop();
+	require( "data/module.js", function( module ) {
+		strictEqual( module(), "hello world", "everything exposed correctly" );
+		start();
+	});
+});
+
 test( "globals", function() {
 	expect( 6 );
 	stop();
