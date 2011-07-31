@@ -1,14 +1,14 @@
 module( "globals" );
 
-test( "base", function() {
-	expect( 6 );
+test( "globals", function() {
+	expect( 7 );
 	stop();
-	require( "data/globals1.js", function( global1 ) {
+	use( "data/globals1.js", function( global1 ) {
 		strictEqual( window.testGlobal, "testGlobal", "test global defined in current window" );
 		strictEqual( global1.get(), "testGlobal", "test global defined in module" );
-		require( "data/globals2.js", function( global2 ) {
+		use( "data/globals2.js", function( global2 ) {
 			strictEqual( global2.get(), "testGlobal", "test global defined in newly loaded module" );
-			globals.remove( "testGlobal" );
+			strictEqual( use.globals.remove( "testGlobal" ), use.globals, "globals methods are chainable" );
 			strictEqual( window.testGlobal, undefined, "test global removed from current window" );
 			strictEqual( global1.get(), undefined, "test global removed from first module" );
 			strictEqual( global2.get(), undefined, "test global removed from second module" );

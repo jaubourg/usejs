@@ -1,28 +1,16 @@
-function Module( add, remove ) {
+function Module( self, add, remove ) {
 	var object = {},
-		locked = false;
+		locked;
 	return {
-		a: function( id, value ) {
+		a: keyValueFunction( self, function( id, value ) {
 			if ( locked ) {
 				error( "expose after init" );
 			}
-			if ( id != undefined ) {
-				if ( arguments.length === 1 ) {
-					value = id;
-					for ( id in value ) {
-						object[ id ] = value[ id ];
-						if ( add ) {
-							add( id, value[ id ] );
-						}
-					}
-				} else if ( arguments.length ) {
-					object[ id ] = value;
-					if ( add ) {
-						add( id, value );
-					}
-				}
+			object[ id ] = value;
+			if ( add ) {
+				add( id, value );
 			}
-		},
+		}),
 		r: function( id ) {
 			if ( locked ) {
 				error( "remove after init" );
@@ -33,6 +21,7 @@ function Module( add, remove ) {
 					remove( id );
 				}
 			}
+			return self;
 		},
 		v: function( newObject ) {
 			if ( newObject != undefined ) {
@@ -44,12 +33,12 @@ function Module( add, remove ) {
 			return object;
 		},
 		l: function() {
-			locked = true;
+			locked = 1;
 		}
 	};
 }
 
-var r_splitURL = /^(.*?)(#.*)?$/,
+var r_splitURL = /^(.*?)(?:#(.*))?$/,
 	modules = {},
 	push = [].push;
 
@@ -57,9 +46,9 @@ function loadModule( url, sandBox, delayed ) {
 	var future,
 		hash = r_splitURL.exec( url );
 	url = hash[ 1 ];
-	hash = ( hash[ 2 ] || "#" ).substr( 1 );
+	hash = hash[ 2 ];
 	future = modules[ url ] || (( modules[ url ] = Future( function( future ) {
-		var module = Module(),
+		var module,
 			count = 1;
 		function dec() {
 			if ( !(( --count )) ) {
@@ -67,23 +56,29 @@ function loadModule( url, sandBox, delayed ) {
 				future.s( module.v() );
 			}
 		}
-		function inc( args ) {
-			if ( count ) {
-				count++;
-				push.call( args, dec );
-			}
+		function inc() {
+			count++;
 		}
 		sandBox( url, function( win, resolveURL ) {
 			windows.push( win );
-			var globals = global.v(),
-				key;
-			for ( key in globals ) {
-				win[ key ] = globals[ key ];
-			}
-			win.require = requireFactory( resolveURL, inc );
-			win.define = defineFactory( resolveURL, inc );
-			win.expose = module.a;
-			win.module = module.v;
+			extend( win, globals.v() );
+			var localUse = win[ "use" ] = useFactory( resolveURL, inc, dec );
+			module = Module( localUse );
+			extend( localUse, {
+				"expose": module.a,
+				"module": module.v,
+				"hold": function( action ) {
+					var done;
+					inc();
+					action(function() {
+						if ( !done ) {
+							done = true;
+							dec();
+						}
+					});
+					return localUse;
+				}
+			});
 		}, dec );
 	}, delayed ) ));
 	if ( hash ) {

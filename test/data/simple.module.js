@@ -1,6 +1,6 @@
 var count = 0;
 
-expose({
+use.expose({
 	getCount: function() {
 		return count++;
 	}

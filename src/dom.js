@@ -1,22 +1,15 @@
-var documentElement = document.documentElement,
-	r_notLoadedOrComplete = /i/;
+var documentElement = document.documentElement;
 
-function testReadyState( readyState ) {
-	return !( readyState && r_notLoadedOrComplete.test( readyState ) );
+function create( tag, doc ) {
+	return ( doc || document ).createElement( tag );
 }
 
 function add( domNode, parent ) {
 	( parent || documentElement ).appendChild( domNode );
 }
 
-function remove( domNode, parent ) {
-	( parent || documentElement ).removeChild( domNode );
+function get( tag, parent ) {
+	return ( parent || documentElement ).getElementsByTagName( tag );
 }
 
-function getByTagName( tag, parent ) {
-	return ( parent || document ).getElementsByTagName( tag );
-}
-
-function create( tag, parent ) {
-	return ( parent || document ).createElement( tag );
-}
+documentElement = get( "head" )[ 0 ] || documentElement;

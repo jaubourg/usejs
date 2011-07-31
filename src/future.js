@@ -40,22 +40,3 @@ function Future( init, onDemand ) {
 	}
 	return future;
 }
-
-function join( futures, callbacks ) {
-	var i, length,
-		joined = Future();
-	for( i = 0, length = callbacks.length; i < length ; i++ ) {
-		joined.g( callbacks[ i ] );
-	}
-	function set( i ) {
-		return function( value ) {
-			futures[ i ] = value;
-			if ( !(( --length )) ) {
-				joined.s.apply( undefined, futures );
-			}
-		};
-	}
-	for ( i = 0, length = futures.length ; i < length ; i++ ) {
-		futures[ i ].g( set( i ) );
-	}
-}

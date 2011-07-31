@@ -2,7 +2,7 @@ var needsRefresh;
 
 function resolveURLFactory( doc ) {
 	var	div = create( "div", doc ),
-		a = getByTagName( "a", div );
+		a = get( "a", div );
 	add( create( "a", doc ), div );
 	return function( url ) {
 		a[ 0 ].href = url;

@@ -1,7 +1,7 @@
-module(function() {
-	return module()._data;
+use.module(function() {
+	return use.module()._data;
 });
 
-expose({
+use.expose({
 	_data: "hello world"
 });

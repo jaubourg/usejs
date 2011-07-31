@@ -1,9 +1,9 @@
 module( "module" );
 
-test( "base", function() {
+test( "module", function() {
 	expect( 1 );
 	stop();
-	require( "data/module.js", function( module ) {
+	use( "data/module.js", function( module ) {
 		strictEqual( module(), "hello world", "everything exposed correctly" );
 		start();
 	});

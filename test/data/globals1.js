@@ -1,6 +1,6 @@
-globals.add( "testGlobal", "testGlobal" );
+use.globals.add( "testGlobal", "testGlobal" );
 
-expose({
+use.expose({
 	get: function() {
 		return window.testGlobal;
 	}

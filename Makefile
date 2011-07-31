@@ -6,7 +6,7 @@ PREFIX = .
 DIST_DIR = ${PREFIX}/dist
 
 JS_ENGINE ?= `which node nodejs`
-COMPILER = ${JS_ENGINE} ${BUILD_DIR}/uglify.js --unsafe
+COMPILER = java -jar ${BUILD_DIR}/compiler.jar --compilation_level ADVANCED_OPTIMIZATIONS --js
 POST_COMPILER = ${JS_ENGINE} ${BUILD_DIR}/post-compile.js
 
 BASE_FILES = $(shell ${JS_ENGINE} ${BUILD_DIR}/get_modules.js ${BUILD_DIR}/data/modules.json ${SRC_DIR})
@@ -51,15 +51,16 @@ lint: use
 min: use ${USE_MIN}
 
 ${USE_MIN}: ${USE}
-	@@if test ! -z ${JS_ENGINE}; then \
+	@@if test ! -z java; then \
 		echo "Minifying usejs" ${USE_MIN}; \
-		${COMPILER} ${USE} > ${USE_MIN}.tmp; \
-		${POST_COMPILER} ${USE_MIN}.tmp > ${USE_MIN}; \
-		rm -f ${USE_MIN}.tmp; \
+		cat ${BUILD_DIR}/data/header.min.js | \
+			sed 's/@DATE/'"${DATE}"'/' | \
+			${VER} > ${USE_MIN}; \
+		${COMPILER} ${USE} >> ${USE_MIN}; \
 	else \
 		echo "You must have nodejs installed in order to minify usejs."; \
 	fi
-	
+
 
 clean:
 	@@echo "Removing Distribution directory:" ${DIST_DIR}

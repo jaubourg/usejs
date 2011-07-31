@@ -1,4 +1,4 @@
-/*!
+/*
  * usejs v@VERSION
  *
  * Copyright 2011, Julian Aubourg

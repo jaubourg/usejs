@@ -1,6 +1,9 @@
 {
-	"require": "require function tests",
-	"module": "module function tests",
+	"type": "get object type",
+	"use": "base usage for use",
+	"hold": "holding module loading",
+	"module": "test module setting inside the module script",
 	"globals": "globals function tests",
-	"define": "define.script and define.alias tests"
+	"bridge": "test plain script bridging",
+	"route": "test 'routing' system"
 }
