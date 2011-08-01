@@ -47,40 +47,17 @@ function loadModule( url, sandBox, delayed ) {
 		hash = r_splitURL.exec( url );
 	url = hash[ 1 ];
 	hash = hash[ 2 ];
-	future = modules[ url ] || (( modules[ url ] = Future( function( future ) {
-		var module,
-			count = 1;
-		function dec() {
-			if ( !(( --count )) ) {
-				module.l();
-				future.s( module.v() );
-			}
-		}
-		function inc() {
-			count++;
-		}
-		sandBox( url, function( win, resolveURL ) {
-			windows.push( win );
-			extend( win, globals.v() );
-			var localUse = win[ "use" ] = useFactory( resolveURL, inc, dec );
-			module = Module( localUse );
-			extend( localUse, {
-				"expose": module.a,
-				"module": module.v,
-				"hold": function( action ) {
-					var done;
-					inc();
-					action(function() {
-						if ( !done ) {
-							done = true;
-							dec();
-						}
-					});
-					return localUse;
-				}
-			});
-		}, dec );
-	}, delayed ) ));
+	future = modules[ url ] ||
+		(( modules[ url ] = Future( function( future ) {
+				sandBox( url, function( win, resolveURL ) {
+					windows.push( win );
+					extend( win, globals.v() );
+					var tmp = useFactory( resolveURL, future );
+					win[ "use" ] = tmp.u;
+					return tmp.r;
+				});
+			}, delayed )
+		));
 	if ( hash ) {
 		hash = hash.split( "." );
 		future = future.f(function( module ) {

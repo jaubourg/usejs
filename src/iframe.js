@@ -1,13 +1,13 @@
 var r_directory = /[^\/]+$/;
 
-function iframe( url, init, onload ) {
-	var win, doc, head, base,
+function iframe( url, init ) {
+	var win, doc, head, base, onload,
 		frm = create( "iframe" );
 	frm.style.display = "none";
 	add( frm );
 	doc = (( win = frm.contentWindow )).document;
 	doc.open();
-	init( win, resolveURLFactory( doc ) );
+	onload = init( win, resolveURLFactory( doc ) );
 	doc.close();
 	base = create( "base", doc );
 	base.href = url.replace( r_directory, "" );
