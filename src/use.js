@@ -73,7 +73,7 @@ function useFactory( resolveURL, future, returnCallback ) {
 			loadModule( resolveRoute( resolveURL( url ) ), scriptSandbox( resolveURL, filter ), true );
 		}),
 		"done": function( callback ) {
-			future.a( callback );
+			future.g( callback );
 			return use;
 		},
 		"expose": module.a,
@@ -92,6 +92,25 @@ function useFactory( resolveURL, future, returnCallback ) {
 			});
 			return use;
 		} )),
+		"js": function() {
+			var args = arguments,
+				length = args.length,
+				callback = length && typeOf( args[ length - 1 ] ) === "function" && args[( --length )];
+			return hold(function( release ) {
+				(function iterate( index ) {
+					if ( index < length ) {
+						loadScript( resolveRoute( resolveURL( args[ index ] ) ), function() {
+							iterate( index + 1 );
+						});
+					} else {
+						if ( callback ) {
+							later( callback );
+						}
+						later( release );
+					}
+				})( 0 );
+			});
+		},
 		"module": module.v,
 		"resolve": resolveURL,
 		"route": keyValueFunction( use, function( route, urlOrFunction ) {
