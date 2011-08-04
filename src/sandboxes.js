@@ -19,7 +19,7 @@ function functionSandbox( resolveURL, filter ) {
 
 var r_directory = /[^\/]+$/;
 
-function iframe( url, init ) {
+function iframeSandbox( url, init ) {
 	var win, doc, head, base, onload,
 		frm = create( "iframe" );
 	frm.style.display = "none";

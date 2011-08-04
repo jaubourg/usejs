@@ -18,7 +18,7 @@ function useFactory( resolveURL, future, returnCallback ) {
 				};
 			}
 			while( index-- ) {
-				loadModule( resolveRoute( resolveURL( args[ index ] ) ), iframe ).g( set( index ) );
+				loadModule( resolveRoute( resolveURL( args[ index ] ) ), iframeSandbox ).g( set( index ) );
 			}
 		});
 	}
