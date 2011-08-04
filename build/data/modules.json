@@ -7,6 +7,7 @@
 	"module": "Module and loading facility",
 	"globals": "Globals module",
 	"script": "Script loading",
+	"route": "Routing system",
 	"use": "Use factory (with function and bridge sandboxing logic)",
 	"expose": "main use function exposition as a global"
 }
