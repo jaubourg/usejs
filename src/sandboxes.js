@@ -1,3 +1,22 @@
+function scriptSandbox( resolveURL, filter ) {
+	return function( url, init ) {
+		loadScript( url, function() {
+			functionSandbox( resolveURL, filter )( url, init );
+		});
+	};
+}
+
+function functionSandbox( resolveURL, filter ) {
+	return function( _, init ) {
+		var sandbox = {},
+			done = init( sandbox, resolveURL );
+		if ( filter ) {
+			filter.call( sandbox, sandbox[ "use" ] );
+		}
+		done();
+	};
+}
+
 var r_directory = /[^\/]+$/;
 
 function iframe( url, init ) {
