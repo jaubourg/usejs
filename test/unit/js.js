@@ -8,7 +8,10 @@ test( "js", function() {
 		window.TEST = "boom";
 		use.js( "data/script1.js", "data/script2.js", function() {
 			strictEqual( window.TEST, "boom", "global not reset" );
-			delete window.TEST;
+			window.TEST = undefined;
+			try {
+				delete window.TEST;
+			} catch( e ) {}
 			start();
 		});
 	}), use, "use.js is chainable" );
