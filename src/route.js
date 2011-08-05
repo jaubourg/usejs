@@ -26,7 +26,7 @@ function setRoute( route, url ) {
 }
 
 // Put outside of the _resolveRoute closure
-// so that to save memory (and speed in IE)
+// to save memory (and gain some speed in IE)
 var r_star = /\$\(([0-9]+)\)|^\$([0-9]+)$/g,
 	stars;
 function fStars( _, $1, $2 ) {
