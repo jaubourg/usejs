@@ -66,3 +66,55 @@ test( "alias", function() {
 		start();
 	});
 });
+
+test( "rewriting", function() {
+	expect( 2 );
+	stop();
+	use.route( "module:/*", "data/$(1).module.js" );
+	use( "module:/simple", "data/simple.module.js", function( alias, simple ) {
+		strictEqual( alias, simple, "rewriting working (1/2)" );
+		use( "module:/complex", "data/complex.module.js", function( alias, complex ) {
+			strictEqual( alias, complex, "rewriting working (2/2)" );
+			start();
+		});
+	});
+});
+
+test( "rewriting - undefined", function() {
+	expect( 1 );
+	stop();
+	use.route({
+		"undefined": "data/simple.module.js",
+		"wonderbar": "$0"
+	});
+	use( "wonderbar", "data/simple.module.js", function( alias, simple ) {
+		strictEqual( alias, simple, "rewriting with no source outputs 'undefined'" );
+		start();
+	});
+});
+
+test( "folder", function() {
+	expect( 2 );
+	stop();
+	use.route( "http://mydomain/some/folder/", "data/" );
+	use( "http://mydomain/some/folder/simple.module.js", "data/simple.module.js", function( alias, simple ) {
+		strictEqual( alias, simple, "folder working (1/2)" );
+		use( "http://mydomain/some/folder/complex.module.js", "data/complex.module.js", function( alias, complex ) {
+			strictEqual( alias, complex, "folder working (2/2)" );
+			start();
+		});
+	});
+});
+
+test( "folder - no slash", function() {
+	expect( 2 );
+	stop();
+	use.route( "http://whatever/some/folder", "data" );
+	use( "http://whatever/some/folder/simple.module.js", "data/simple.module.js", function( alias, simple ) {
+		strictEqual( alias, simple, "folder working (1/2)" );
+		use( "http://whatever/some/folder/complex.module.js", "data/complex.module.js", function( alias, complex ) {
+			strictEqual( alias, complex, "folder working (2/2)" );
+			start();
+		});
+	});
+});

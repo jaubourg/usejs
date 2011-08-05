@@ -79,7 +79,7 @@ function useFactory( resolveURL, future, returnCallback ) {
 			if ( typeOf( urlOrFunction ) === "function" ) {
 				loadModule( route, functionSandbox( resolveURL, urlOrFunction ), true );
 			} else {
-				routes[ route ] = resolveURL( urlOrFunction );
+				setRoute( route, resolveURL( urlOrFunction ) );
 			}
 		}),
 		"type": typeOf
