@@ -1,7 +1,13 @@
+// Future constructor
+// init( future ) is called right after the future has been created
+// and before the constructor returns, unless onDemand is true, in which
+// case init is called during the first call to future.g, effectively
+// making the actual retrieval of the value "on demand".
 function Future( init, onDemand ) {
 	var callbacks = [],
 		values,
 		future = {
+			// Get the value using function callback( value )
 			g: function( callback ) {
 				if ( onDemand ) {
 					onDemand = false;
@@ -15,6 +21,8 @@ function Future( init, onDemand ) {
 					later( callback, values );
 				}
 			},
+			// Set the value (will control if not already called)
+			// fires all attached callbacks if needed
 			s: function() {
 				if ( !values ) {
 					var cbs = callbacks,
@@ -27,6 +35,8 @@ function Future( init, onDemand ) {
 					}
 				}
 			},
+			// Filter the value: returns a new Future which value
+			// will be equal to fn( currentFuture.value )
 			f: function( fn ) {
 				return Future( function( filtered ) {
 					future.g(function( value ) {
