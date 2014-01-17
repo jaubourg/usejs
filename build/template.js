@@ -7,3 +7,6 @@
  * Date: @DATE
  */
 ( function( window, document, undefined ) {
+
+@CODE
+} )( window, document );

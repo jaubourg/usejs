@@ -16,11 +16,8 @@ __usejs__ has been tested in Internet Explorer (6 to 9), Chrome (latest), Firefo
 ## Build the library
 
 * Clone this repository
-* Make sure you have
-  * java installed to build the minified version
-  * nodejs installed to run jslint against the source
-  * a php enabled web server to run the tests
-* Enter the usejs directory and type "make"
+* Make sure you have nodejs installed
+* Enter the usejs directory and type `node .`
 
 ## Load the Library
 

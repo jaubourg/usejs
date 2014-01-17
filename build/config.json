@@ -1,6 +1,6 @@
 {
-	version: "0.3.0pre",
-	modules: {
+	"version": "0.3.0pre",
+	"modules": {
 		"utils": "General utilities",
 		"dom": "DOM manipulation shortcuts",
 		"future": "Futures",
