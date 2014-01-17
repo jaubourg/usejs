@@ -1,11 +1,9 @@
 usejs
 =====
 
-__WARNING: as of version 0.2.0, the API has been completely changed in order to limit global namespace pollution. If you used 0.1.0pre, be prepared to rewrite your code (things should be globally smooth though).__ 
-
 __usejs__ is a simple _module_ loader and dependency manager for the browser. It provides sandboxing of _modules_ and the means to transform any script into a __usejs__ module.
 
-__usejs__ weights only 1.48kB when minified gzipped and is dual-licensed under the MIT or GPL Version 2 licenses.
+__usejs__ weights only 1.48kB when minified gzipped and is released under the MIT license.
 
 __usejs__ has been tested in Internet Explorer (6 to 9), Chrome (latest), Firefox 5, Opera (latest) and Safari (latest).
 
