@@ -8,18 +8,18 @@ asyncTest( "hold", 6, function() {
 		four: 4
 	};
 	var loaded;
-	use.globals.add( "holdDone", function() {
+	window.holdDone = function() {
 		setTimeout( function() {
 			ok( !loaded, "hold delays loading" );
 		}, 200 );
-	} );
+	};
 	use( "data/hold.js", function( module ) {
 		loaded = true;
 		ok( module.chainable, "hold is chainable" );
 		for ( var key in expected ) {
 			strictEqual( module[ key ], expected[ key ], "exposed field " + key + " equals " + expected[ key ] );
 		}
-		use.globals.remove( "holdDone" );
+		window.holdDone = undefined;
 		start();
 	} );
 } );

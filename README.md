@@ -244,31 +244,6 @@ use( "namespace:path/to/element", function( alwaysAsConfigured ) {
 });
 ```
 
-## Globals
-
-OK, globals are __evil__. Yet, they are sometimes unavoidable, especially when loading interdependent scripts that are not modules (like a _jQuery_ plugin). Here is how we can enhance our _jQuery_ adapter to make the _jQuery_ object global:
-
-```javascript
-use.bridge( "path/to/script/jQuery.js", function( use ) {
-    if ( window.jQuery ) {
-    	use.globals.add({
-        	jQuery: jQuery,
-        	$: jQuery
-        });
-    } else {
-        throw "cannot load jQuery";
-    }
-});
-
-// then later...
-use( "path/to/script/jQuery.js", function( $ ) {
-	console.log( window.$ === $ ); // will output true
-});
-```
-Global properties will be available to all _modules_, already loaded, loading or not yet loaded. Be mindful of potentially harmful collisions with globally declared variables in your _modules_. __Evil__, I tell you.
-
-Also, if you wish to propagate changes to a global throughout all _modules_, you _have to_ set it using the _globals_ function again.
-
 ## Utilities
 
 First of all, _use_ and all its methods are chainable, so the following will work:

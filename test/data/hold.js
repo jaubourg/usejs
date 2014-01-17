@@ -18,4 +18,4 @@ for( key in exposed ) {
 	} )( key );
 }
 
-window.holdDone();
+window.top.holdDone();

@@ -38,7 +38,6 @@ function useFactory( resolveURL, future, returnCallback ) {
 			return use;
 		},
 		"expose": module.a,
-		"globals": globalsRef,
 		"hold": ( ( hold = function( action ) {
 			count++;
 			var done;
