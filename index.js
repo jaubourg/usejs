@@ -1,6 +1,5 @@
-// Build file for usejs
+var exec = require( "child_process" ).exec;
 var fs = require( "fs" );
-var path = require( "path" );
 
 process.chdir( __dirname );
 
@@ -41,9 +40,16 @@ var fullText = template( "build/template.js", {
 	} ).join( "\n" )
 } );
 
+// Let's install what's needed for testing
+exec( "bower install qunit#1.13.0", function( error ) {
+	if ( error ) {
+		console.error( "You need to install bower in order to unit test!" );
+	}
+} );
+
 // Let's install some packages
 console.log( "Installing packages..." );
-require( "child_process" ).exec( "npm install uglify-js@2.4.9 jshint@2.4.1", function( error ) {
+exec( "npm install uglify-js@2.4.9 jshint@2.4.1", function( error ) {
 	if ( error ) {
 		throw error;
 	}
@@ -56,3 +62,4 @@ require( "child_process" ).exec( "npm install uglify-js@2.4.9 jshint@2.4.1", fun
 	write( "dist/use.js", fullText );
 	write( "dist/use.min.js", minified );
 } );
+

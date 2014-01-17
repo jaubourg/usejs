@@ -13,7 +13,7 @@
 
 	loadScript( "../dist/use.js" );
 
-	loadScript( "qunit/qunit/qunit.js" );
+	loadScript( "../bower_components/qunit/qunit/qunit.js" );
 
 	for( var unit in getJSON( "units.json" ) ) {
 		loadScript( "unit/" + unit + ".js" );
