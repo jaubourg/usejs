@@ -10,12 +10,12 @@
 	
 	switch( $src ) {
 		case "src":
-			array_push( $files, "../build/data/intro.js" );
-			$modules = json_decode( file_get_contents( "../build/data/modules.json" ), true );
+			array_push( $files, "../build/intro.js" );
+			$modules = json_decode( file_get_contents( "../build/modules.json" ), true );
 			foreach( $modules as $module => $_ ) {
 				array_push( $files, "../src/$module.js" );
 			}
-			array_push( $files, "../build/data/outro.js" );
+			array_push( $files, "../build/outro.js" );
 			break;
 		case "min":
 			array_push( $files, "../dist/use.min.js" );
