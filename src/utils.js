@@ -4,8 +4,8 @@ var r_type = / |\]/,
 
 function typeOf( value ) {
 	return ( value == undefined ) ?
-		types[ value ] || (( types[ value ] = "" + value )) :
-		types[(( value = toString.call( value ) ))] || (( types[ value ] = value.split( r_type )[ 1 ].toLowerCase() ));
+		types[ value ] || ( ( types[ value ] = "" + value ) ) :
+		types[ ( ( value = toString.call( value ) ) ) ] || ( ( types[ value ] = value.split( r_type )[ 1 ].toLowerCase() ) );
 }
 
 function error( msg ) {
@@ -13,7 +13,7 @@ function error( msg ) {
 }
 
 function later( fn, args ) {
-	return setTimeout(function() {
+	return setTimeout( function() {
 		fn.apply( undefined, args || [] );
 	}, 0 );
 }

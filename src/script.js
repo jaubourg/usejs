@@ -15,11 +15,11 @@ function loadScript( url, callback, parent ) {
 			"onload": done,
 			"onreadystatechange": done,
 			"src": url
-		});
+		} );
 		add( script, parent );
 	} else {
-		( scripts[ url ] || (( scripts[ url ] = Future(function( future ) {
+		( scripts[ url ] || ( ( scripts[ url ] = Future(function( future ) {
 			loadScript( url, future.s, documentElement );
-		}) )) ).g( callback );
+		} ) ) ) ).g( callback );
 	}
 }

@@ -2,7 +2,7 @@ function scriptSandbox( resolveURL, filter ) {
 	return function( url, init ) {
 		loadScript( url, function() {
 			functionSandbox( resolveURL, filter )( url, init );
-		});
+		} );
 	};
 }
 
@@ -24,12 +24,12 @@ function iframeSandbox( url, init ) {
 		frm = create( "iframe" );
 	frm.style.display = "none";
 	add( frm );
-	doc = (( win = frm.contentWindow )).document;
+	doc = ( ( win = frm.contentWindow ) ).document;
 	doc.open();
 	onload = init( win, resolveURLFactory( doc ) );
 	doc.close();
 	base = create( "base", doc );
 	base.href = url.replace( r_directory, "" );
-	add( base, (( head = get( "head", doc )[ 0 ] )) );
+	add( base, ( ( head = get( "head", doc )[ 0 ] ) ) );
 	loadScript( url, onload, head );
 }

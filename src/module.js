@@ -19,7 +19,7 @@ function Module( self, add, remove ) {
 			if ( add ) {
 				add( id, value );
 			}
-		}),
+		} ),
 		// Remove a field from the module
 		// throws an exception if module is locked
 		r: function( id ) {
@@ -66,24 +66,24 @@ function loadModule( url, sandBox, delayed ) {
 	url = hash[ 1 ];
 	hash = hash[ 2 ];
 	future = modules[ url ] ||
-		(( modules[ url ] = Future( function( future ) {
+		( ( modules[ url ] = Future( function( future ) {
 				sandBox( url, function( win, resolveURL ) {
 					windows.push( win );
 					extend( win, globals.v() );
 					var tmp = useFactory( resolveURL, future );
 					win[ "use" ] = tmp.u;
 					return tmp.r;
-				});
+				} );
 			}, delayed )
-		));
+		) );
 	if ( hash ) {
 		hash = hash.split( "." );
-		future = future.f(function( module ) {
+		future = future.f( function( module ) {
 			for ( var i = 0, length = hash.length; i < length; i++ ) {
 				module = module[ hash[ i ] ];
 			}
 			return module;
-		});
+		} );
 	}
 	return future;
 }

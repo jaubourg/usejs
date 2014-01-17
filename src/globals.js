@@ -15,10 +15,10 @@ var // List of global objects (windows and functionSandbox contexts)
 				delete windows[ i ][ id ];
 			} catch( e ) {}
 		}
-	});
+	} );
 
 // Finalize the creation of the "global" globals object
 extend( globalsRef, {
 	"add": globals.a,
 	"remove": globals.r
-});
+} );

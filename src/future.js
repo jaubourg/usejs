@@ -39,9 +39,9 @@ function Future( init, onDemand ) {
 			// will be equal to fn( currentFuture.value )
 			f: function( fn ) {
 				return Future( function( filtered ) {
-					future.g(function( value ) {
+					future.g( function( value ) {
 						filtered.s( fn( value ) );
-					});
+					} );
 				}, onDemand );
 			}
 		};

@@ -26,7 +26,7 @@ function setRoute( route, url ) {
 		length = route.length,
 		current = routes;
 	for( ; index < length; index++ ) {
-		current = current[ route[ index ] ] || (( current[ route[ index ] ] = {} ));
+		current = current[ route[ index ] ] || ( ( current[ route[ index ] ] = {} ) );
 	}
 	// Store the target path
 	// (keys with slashes are safe because no path part can contain them)
@@ -71,7 +71,7 @@ function _resolveRoute( data, hashes ) {
 		}
 	}
 	// If there actually is a route definition
-	if (( tmp = current[ "/" ] )) {
+	if ( ( tmp = current[ "/" ] ) ) {
 		// Replaces the portion we found (handles folders)
 		data.u = url = tmp.concat( url.slice( index ) );
 		// Applies substitutions
