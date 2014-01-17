@@ -26,22 +26,21 @@ function setRoute( route, urlOrFunction, resolveURL ) {
 	for( ; index < length; index++ ) {
 		current = current[ route[ index ] ] || ( ( current[ route[ index ] ] = {} ) );
 	}
-	// Is target a url or a function?
-	if ( typeOf( urlOrFunction ) === "function" ) {
-		// We have a function
-		current[ "/" ] = urlOrFunction;
-		// Keep track of how to resolve URLs
-		current[ "/r" ] = resolveURL;
-		// Let's prepare a map of already resolved routes
-		current[ "/*" ] = {};
-	} else {
-		// Splits the target path
-		urlOrFunction = splitURL( resolveURL( urlOrFunction ) );
-		// Store the target path
-		// (keys with slashes are safe because no path part can contain them)
-		current[ "/" ] = urlOrFunction.u;
-		current[ "/#" ] = urlOrFunction.h;
-	}
+	// Store the target path
+	// (slash is safe because no path part can contain it)
+	current[ "/" ] =
+		// Is target a function?
+		( typeOf( urlOrFunction ) === "function" ) ? {
+			// We have a function
+			f: urlOrFunction,
+			// Keep track of how to resolve URLs
+			r: resolveURL,
+			// Let's prepare a map of already resolved routes
+			e: {}
+		} :
+			// Store the URL otherwize
+			splitURL( resolveURL( urlOrFunction ) )
+		;
 }
 
 // This is outside of the _resolveRoute closure
@@ -80,30 +79,30 @@ function _resolveRoute( data, hashes ) {
 	// If there actually is a route definition
 	if ( ( tmp = current[ "/" ] ) ) {
 		// Is target a url or a function?
-		if ( typeOf( tmp ) === "function" ) {
+		if ( tmp.f ) {
 			// Only full paths work here
 			if ( index === length ) {
 				url = url.join( "/" );
 				// Load the module if not done already (handles stars)
-				if ( !current[ "/*" ][ url ] ) {
-					current[ "/*" ][ url ] = true;
-					loadModule( url, functionSandbox( current[ "/r" ], function( use ) {
-						tmp.apply( this, [ use ].concat( stars ) );
+				if ( !tmp.e[ url ] ) {
+					tmp.e[ url ] = true;
+					loadModule( url, functionSandbox( tmp.r, function( use ) {
+						tmp.f.apply( this, [ use ].concat( stars ) );
 					} ), true );
 				}
 			}
 		} else {
 			// Replaces the portion we found (handles folders)
-			data.u = url = tmp.concat( url.slice( index ) );
+			data.u = url = tmp.u.concat( url.slice( index ) );
 			// Applies substitutions
-			for ( index = 0, length = tmp.length; index < length; index++ ) {
+			for ( index = 0, length = tmp.u.length; index < length; index++ ) {
 				url[ index ] = url[ index ].replace( r_star, function( _, $1, $2 ) {
 					return "" + stars[ ( $1 || $2 ) - 1 ];
 				} );
 			}
 			stars = undefined;
 			// Stores the corresponding hash
-			data.h = current[ "/#" ];
+			data.h = tmp.h;
 			// Attempts to resolve again (to handle recursive definitions)
 			_resolveRoute( data, hashes );
 		}
