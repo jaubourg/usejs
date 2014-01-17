@@ -22,9 +22,9 @@ function setRoute( route, url ) {
 	url = splitURL( url );
 	// Creates the routing structure
 	// (it's a tree of plain objects where keys are segments)
-	var index = 0,
-		length = route.length,
-		current = routes;
+	var index = 0;
+	var length = route.length;
+	var current = routes;
 	for( ; index < length; index++ ) {
 		current = current[ route[ index ] ] || ( ( current[ route[ index ] ] = {} ) );
 	}
@@ -36,8 +36,8 @@ function setRoute( route, url ) {
 
 // This is outside of the _resolveRoute closure
 // to save memory (and gain some speed in IE)
-var r_star = /\$\(([0-9]+)\)|^\$([0-9]+)$/g,
-	stars;
+var r_star = /\$\(([0-9]+)\)|^\$([0-9]+)$/g;
+var stars;
 function fStars( _, $1, $2 ) {
 	return "" + stars[ ( $1 || $2 ) - 1 ];
 }
@@ -48,11 +48,11 @@ function _resolveRoute( data, hashes ) {
 	if ( data.h ) {
 		hashes.push( data.h );
 	}
-	var url = data.u,
-		current = routes,
-		index = 0,
-		length = url.length,
-		tmp;
+	var url = data.u;
+	var current = routes;
+	var index = 0;
+	var length = url.length;
+	var tmp;
 	stars = [];
 	// Explores the route structure
 	for( index = 0, length = url.length; index < length ; index++ ) {

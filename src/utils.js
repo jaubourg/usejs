@@ -1,6 +1,6 @@
-var r_type = / |\]/,
-	types = {},
-	toString = types.toString;
+var r_type = / |\]/;
+var types = {};
+var toString = types.toString;
 
 function typeOf( value ) {
 	return ( value == undefined ) ?

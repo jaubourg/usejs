@@ -1,10 +1,10 @@
 function useFactory( resolveURL, future, returnCallback ) {
 	function use() {
-		var args = arguments,
-			futures = [],
-			index = args.length,
-			callback = index && typeOf( args[ index - 1 ] ) === "function" && args[ ( --index ) ],
-			count = index;
+		var args = arguments;
+		var futures = [];
+		var index = args.length;
+		var callback = index && typeOf( args[ index - 1 ] ) === "function" && args[ ( --index ) ];
+		var count = index;
 		return hold( function( release ) {
 			function set( i ) {
 				return function( value ) {
@@ -22,10 +22,10 @@ function useFactory( resolveURL, future, returnCallback ) {
 			}
 		} );
 	}
-	var module = Module( use ),
-		hold,
-		release,
-		count = 0;
+	var module = Module( use );
+	var hold;
+	var release;
+	var count = 0;
 	extend( use, {
 		"bridge": keyValueFunction( use, function( url, filter ) {
 			if ( filter && typeOf( filter ) !== "function" ) {
@@ -54,9 +54,9 @@ function useFactory( resolveURL, future, returnCallback ) {
 			return use;
 		} ) ),
 		"js": function() {
-			var args = arguments,
-				length = args.length,
-				callback = length && typeOf( args[ length - 1 ] ) === "function" && args[ ( --length ) ];
+			var args = arguments;
+			var length = args.length;
+			var callback = length && typeOf( args[ length - 1 ] ) === "function" && args[ ( --length ) ];
 			return hold( function( release ) {
 				( function iterate( index ) {
 					if ( index < length ) {

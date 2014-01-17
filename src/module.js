@@ -61,8 +61,8 @@ var r_splitURL = /^(.*?)(?:#(.*))?$/,
 // Caching is handled using Futures. If delayed is true, then the Future will
 // be "on demand" and no action will be immediately taken.
 function loadModule( url, sandBox, delayed ) {
-	var future,
-		hash = r_splitURL.exec( url );
+	var future;
+	var hash = r_splitURL.exec( url );
 	url = hash[ 1 ];
 	hash = hash[ 2 ];
 	future = modules[ url ] ||

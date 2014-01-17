@@ -1,8 +1,8 @@
 var needsRefresh;
 
 function resolveURLFactory( doc ) {
-	var	div = create( "div", doc ),
-		a = get( "a", div );
+	var	div = create( "div", doc );
+	var a = get( "a", div );
 	add( create( "a", doc ), div );
 	return function( url ) {
 		a[ 0 ].href = url;

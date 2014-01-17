@@ -8,8 +8,8 @@ function scriptSandbox( resolveURL, filter ) {
 
 function functionSandbox( resolveURL, filter ) {
 	return function( _, init ) {
-		var sandbox = {},
-			done = init( sandbox, resolveURL );
+		var sandbox = {};
+		var done = init( sandbox, resolveURL );
 		if ( filter ) {
 			filter.call( sandbox, sandbox[ "use" ] );
 		}
@@ -20,8 +20,8 @@ function functionSandbox( resolveURL, filter ) {
 var r_directory = /[^\/]+$/;
 
 function iframeSandbox( url, init ) {
-	var win, doc, head, base, onload,
-		frm = create( "iframe" );
+	var win, doc, head, base, onload;
+	var frm = create( "iframe" );
 	frm.style.display = "none";
 	add( frm );
 	doc = ( ( win = frm.contentWindow ) ).document;
