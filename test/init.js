@@ -1,5 +1,7 @@
 ( function() {
 
+	// UTILITIES
+
 	function loadScript( url ) {
 		document.write( "<script src='" + url +"'></script>\n" );
 	}
@@ -14,6 +16,15 @@
 	function getJSON( url ) {
 		return new Function( "return " + getText( url ) +";" )()
 	}
+
+	// LOAD QUNIT
+
+	var qunitPath = "../bower_components/qunit/qunit/";
+
+	document.write( "<link rel='stylesheet' media='screen' href='" + qunitPath +"qunit.css' />\n" );
+	loadScript( qunitPath + "qunit.js" );
+
+	// LOAD USEJS
 
 	var hash = document.location.hash + "";
 
@@ -32,7 +43,7 @@
 			} )();
 	}
 
-	loadScript( "../bower_components/qunit/qunit/qunit.js" );
+	// LOAD UNIT TESTS
 
 	for( var unit in getJSON( "units.json" ) ) {
 		loadScript( "unit/" + unit + ".js" );
