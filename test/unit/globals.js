@@ -1,8 +1,6 @@
 module( "globals" );
 
-test( "globals", function() {
-	expect( 7 );
-	stop();
+asyncTest( "globals", 7, function() {
 	use( "data/globals1.js", function( global1 ) {
 		strictEqual( window.testGlobal, "testGlobal", "test global defined in current window" );
 		strictEqual( global1.get(), "testGlobal", "test global defined in module" );
@@ -13,6 +11,6 @@ test( "globals", function() {
 			strictEqual( global1.get(), undefined, "test global removed from first module" );
 			strictEqual( global2.get(), undefined, "test global removed from second module" );
 			start();
-		});
-	});
-});
+		} );
+	} );
+} );

@@ -1,7 +1,7 @@
 var count = 0;
 
-use.expose({
+use.expose( {
 	getCount: function() {
 		return count++;
 	}
-});
+} );

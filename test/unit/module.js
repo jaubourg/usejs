@@ -1,10 +1,8 @@
 module( "module" );
 
-test( "module", function() {
-	expect( 1 );
-	stop();
+asyncTest( "module", 1, function() {
 	use( "data/module.js", function( module ) {
 		strictEqual( module(), "hello world", "everything exposed correctly" );
 		start();
-	});
-});
+	} );
+} );

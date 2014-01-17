@@ -1,8 +1,6 @@
 module( "js" );
 
-test( "js", function() {
-	expect( 5 );
-	stop();
+asyncTest( "js", 5, function() {
 	strictEqual( use.js( "data/script1.js", "data/script2.js", function() {
 		strictEqual( window.TEST, "hello world", "global set properly" );
 		window.TEST = "boom";
@@ -13,6 +11,6 @@ test( "js", function() {
 				delete window.TEST;
 			} catch( e ) {}
 			start();
-		});
-	}), use, "use.js is chainable" );
-});
+		} );
+	} ), use, "use.js is chainable" );
+} );
