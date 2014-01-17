@@ -19,10 +19,8 @@
 
 	// LOAD QUNIT
 
-	var qunitPath = "../bower_components/qunit/qunit/";
-
-	document.write( "<link rel='stylesheet' media='screen' href='" + qunitPath +"qunit.css' />\n" );
-	loadScript( qunitPath + "qunit.js" );
+	document.write( "<link rel='stylesheet' media='screen' href='qunit/qunit/qunit.css' />\n" );
+	loadScript( "qunit/qunit/qunit.js" );
 
 	// LOAD USEJS
 

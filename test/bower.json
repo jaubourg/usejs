@@ -1,0 +1,6 @@
+{
+	"name": "usejs unit tests",
+	"dependencies": {
+		"qunit": "1.13.x"
+	}
+}
