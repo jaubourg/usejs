@@ -11,7 +11,9 @@
 		return xhr.responseText;
 	}
 
-	var build = new Function( "return " + getText( "../build/build.js" ) +";" )()( getText );
+	function getJSON( url ) {
+		return new Function( "return " + getText( url ) +";" )()
+	}
 
 	var hash = document.location.hash + "";
 
@@ -24,15 +26,15 @@
 			break;
 		default:
 			( function() {
-				var config = build.getJSON( "../build/config.json" );
-				var dist = build( "../build/template.js", config.version, config.modules, "../src/%%.js" );
+				var config = getJSON( "../build/config.json" );
+				var dist = getJSON( "../build/build.js" )( getText )( "../build/template.js", config.version, config.modules, "../src/%%.js" );
 				document.write( "<script>//<!--\n" + dist + "\n//--></script>" );
 			} )();
 	}
 
 	loadScript( "../bower_components/qunit/qunit/qunit.js" );
 
-	for( var unit in build.getJSON( "units.json" ) ) {
+	for( var unit in getJSON( "units.json" ) ) {
 		loadScript( "unit/" + unit + ".js" );
 	}
 

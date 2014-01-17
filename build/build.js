@@ -1,7 +1,4 @@
 function buildFactory( getText ) {
-	function getJSON( url ) {
-		return ( new Function( "return " + getText( url ) + ";" ) )();
-	}
 	var templates = {};
 	var r_template = /@([A-Z]+)/g;
 	function template( url, data ) {
@@ -9,7 +6,7 @@ function buildFactory( getText ) {
 			return data[ $1 ];
 		} );
 	}
-	function build( templateURL, version, modulesOrCode, moduleRewrite ) {
+	return function( templateURL, version, modulesOrCode, moduleRewrite ) {
 		var code = modulesOrCode;
 		if ( moduleRewrite ) {
 			code = "";
@@ -23,9 +20,6 @@ function buildFactory( getText ) {
 			VERSION: version
 		} );
 	}
-	build.getJSON = getJSON;
-	build.template = template;
-	return build;
 };
 
 try {

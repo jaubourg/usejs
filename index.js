@@ -25,7 +25,7 @@ try {
 } catch( _ ) {}
 
 // Get the config
-var config = build.getJSON( "build/config.json" );
+var config = JSON.parse( read( "build/config.json" ) );
 
 // Generate the full text script
 var fullText = build( "build/template.js", config.version, config.modules, "src/%%.js" );
