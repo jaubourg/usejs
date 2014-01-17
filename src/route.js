@@ -15,11 +15,9 @@ function splitURL( url ) {
 	};
 }
 
-function setRoute( route, url ) {
+function setRoute( route, urlOrFunction, resolveURL ) {
 	// Splits the route and ignore the hash
-	route = splitURL( route ).u;
-	// Splits the target path
-	url = splitURL( url );
+	route = splitURL( resolveURL( route ) ).u;
 	// Creates the routing structure
 	// (it's a tree of plain objects where keys are segments)
 	var index = 0;
@@ -28,19 +26,27 @@ function setRoute( route, url ) {
 	for( ; index < length; index++ ) {
 		current = current[ route[ index ] ] || ( ( current[ route[ index ] ] = {} ) );
 	}
-	// Store the target path
-	// (keys with slashes are safe because no path part can contain them)
-	current[ "/" ] = url.u;
-	current[ "/#" ] = url.h;
+	// Is target a url or a function?
+	if ( typeOf( urlOrFunction ) === "function" ) {
+		// We have a function
+		current[ "/" ] = urlOrFunction;
+		// Keep track of how to resolve URLs
+		current[ "/r" ] = resolveURL;
+		// Let's prepare a map of already resolved routes
+		current[ "/*" ] = {};
+	} else {
+		// Splits the target path
+		urlOrFunction = splitURL( resolveURL( urlOrFunction ) );
+		// Store the target path
+		// (keys with slashes are safe because no path part can contain them)
+		current[ "/" ] = urlOrFunction.u;
+		current[ "/#" ] = urlOrFunction.h;
+	}
 }
 
 // This is outside of the _resolveRoute closure
 // to save memory (and gain some speed in IE)
 var r_star = /\$\(([0-9]+)\)|^\$([0-9]+)$/g;
-var stars;
-function fStars( _, $1, $2 ) {
-	return "" + stars[ ( $1 || $2 ) - 1 ];
-}
 
 // Recursively resolves routes
 function _resolveRoute( data, hashes ) {
@@ -48,6 +54,7 @@ function _resolveRoute( data, hashes ) {
 	if ( data.h ) {
 		hashes.push( data.h );
 	}
+	var stars;
 	var url = data.u;
 	var current = routes;
 	var index = 0;
@@ -72,22 +79,39 @@ function _resolveRoute( data, hashes ) {
 	}
 	// If there actually is a route definition
 	if ( ( tmp = current[ "/" ] ) ) {
-		// Replaces the portion we found (handles folders)
-		data.u = url = tmp.concat( url.slice( index ) );
-		// Applies substitutions
-		for ( index = 0, length = tmp.length; index < length; index++ ) {
-			url[ index ] = url[ index ].replace( r_star, fStars );
+		// Is target a url or a function?
+		if ( typeOf( tmp ) === "function" ) {
+			// Only full paths work here
+			if ( index === length ) {
+				url = url.join( "/" );
+				// Load the module if not done already (handles stars)
+				if ( !current[ "/*" ][ url ] ) {
+					current[ "/*" ][ url ] = true;
+					loadModule( url, functionSandbox( current[ "/r" ], function( use ) {
+						tmp.apply( this, [ use ].concat( stars ) );
+					} ), true );
+				}
+			}
+		} else {
+			// Replaces the portion we found (handles folders)
+			data.u = url = tmp.concat( url.slice( index ) );
+			// Applies substitutions
+			for ( index = 0, length = tmp.length; index < length; index++ ) {
+				url[ index ] = url[ index ].replace( r_star, function( _, $1, $2 ) {
+					return "" + stars[ ( $1 || $2 ) - 1 ];
+				} );
+			}
+			stars = undefined;
+			// Stores the corresponding hash
+			data.h = current[ "/#" ];
+			// Attempts to resolve again (to handle recursive definitions)
+			_resolveRoute( data, hashes );
 		}
-		stars = undefined;
-		// Stores the corresponding hash
-		data.h = current[ "/#" ];
-		// Attempts to resolve again (to handle recursive definitions)
-		_resolveRoute( data, hashes );
 	}
 }
 
-function resolveRoute( url ) {
-	url = splitURL( url );
+function resolveRoute( url, resolveURL ) {
+	url = splitURL( resolveURL( url ) );
 	var hashes = [];
 	_resolveRoute( url, hashes );
 	url = url.u.join( "/" );

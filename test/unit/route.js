@@ -69,13 +69,29 @@ asyncTest( "rewriting", 2, function() {
 } );
 
 asyncTest( "rewriting - undefined", 1, function() {
-	use.route({
+	use.route( {
 		"undefined": "data/simple.module.js",
 		"wonderbar": "$0"
 	} );
 	use( "wonderbar", "data/simple.module.js", function( alias, simple ) {
 		strictEqual( alias, simple, "rewriting with no source outputs 'undefined'" );
 		start();
+	} );
+} );
+
+asyncTest( "rewriting - function", 3, function() {
+	use.route( "template:/*", function( use, name ) {
+		use.expose( {
+			name: name
+		} );
+	} );
+	use( "template:/calendar", "template:/panel", function( calendar, panel ) {
+		strictEqual( calendar.name, "calendar", "parameter passed (1/2)" );
+		strictEqual( panel.name, "panel", "parameter passed (2/2)" );
+		use( "template:/panel", function( panelCopy ) {
+			strictEqual( panel, panelCopy, "Unicity respected" );
+			start();
+		} );
 	} );
 } );
 

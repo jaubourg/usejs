@@ -18,7 +18,7 @@ function useFactory( resolveURL, future, returnCallback ) {
 				};
 			}
 			while( index-- ) {
-				loadModule( resolveRoute( resolveURL( args[ index ] ) ), iframeSandbox ).g( set( index ) );
+				loadModule( resolveRoute( args[ index ], resolveURL ), iframeSandbox ).g( set( index ) );
 			}
 		} );
 	}
@@ -31,7 +31,7 @@ function useFactory( resolveURL, future, returnCallback ) {
 			if ( filter && typeOf( filter ) !== "function" ) {
 				filter = undefined;
 			}
-			loadModule( resolveRoute( resolveURL( url ) ), scriptSandbox( resolveURL, filter ), true );
+			loadModule( resolveRoute( url, resolveURL ), scriptSandbox( resolveURL, filter ), true );
 		} ),
 		"done": function( callback ) {
 			future.g( callback );
@@ -60,7 +60,7 @@ function useFactory( resolveURL, future, returnCallback ) {
 			return hold( function( release ) {
 				( function iterate( index ) {
 					if ( index < length ) {
-						loadScript( resolveRoute( resolveURL( args[ index ] ) ), function() {
+						loadScript( resolveRoute( args[ index ], resolveURL ), function() {
 							iterate( index + 1 );
 						});
 					} else {
@@ -75,12 +75,7 @@ function useFactory( resolveURL, future, returnCallback ) {
 		"module": module.v,
 		"resolve": resolveURL,
 		"route": keyValueFunction( use, function( route, urlOrFunction ) {
-			route = resolveURL( route );
-			if ( typeOf( urlOrFunction ) === "function" ) {
-				loadModule( route, functionSandbox( resolveURL, urlOrFunction ), true );
-			} else {
-				setRoute( route, resolveURL( urlOrFunction ) );
-			}
+			setRoute( route, urlOrFunction, resolveURL );
 		} ),
 		"type": typeOf
 	} );
