@@ -1,9 +1,7 @@
 module( "done" );
 
-test( "done", function() {
-	stop();
-	strictEqual( use.done( function( module ) {
-		ok( true, "done called" );
+asyncTest( "done", 2, function() {
+	use( "data/done.js", function() {
 		start();
-	} ), use, "use.done is chainable" );
-});
+	} );
+} );
