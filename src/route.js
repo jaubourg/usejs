@@ -27,10 +27,18 @@ function setRoute( route, target, resolveURL, isDefine ) {
 	var index = 0;
 	var length = route.length;
 	var current = routes;
+	var recursive;
 	for( ; index < length; index++ ) {
+		if ( route[ index ] === "**" ) {
+			recursive = current;
+			route[ index ] = "*";
+		}
 		current = current.c[ route[ index ] ] || ( ( current.c[ route[ index ] ] = {
 			c: {}
 		} ) );
+		if ( recursive ) {
+			current.c[ "/" ] = recursive;
+		}
 	}
 	var targetIsAFunction = typeOf( target ) === "function";
 	// Store the target path
