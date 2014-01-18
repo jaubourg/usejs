@@ -135,7 +135,7 @@ asyncTest( "define function", 4, function() {
 			strictEqual( module.getCount(), testCount++, "getCount attached correctly" );
 			start();
 		} );
-	}, 2000 );
+	}, 50 );
 } );
 
 asyncTest( "define - function - rewriting", 5, function() {

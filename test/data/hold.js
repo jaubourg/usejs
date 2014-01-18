@@ -13,7 +13,7 @@ for( key in exposed ) {
 				use.expose( key, exposed[ key ] );
 				release();
 				release();
-			}, 500 + Math.floor( Math.random() * 400 ) );
+			}, 60 + Math.floor( Math.random() * 20 ) );
 		} ).hold === use.hold );
 	} )( key );
 }

@@ -6,7 +6,7 @@ use.hold( function( release ) {
 			hello: "world"
 		} );
 		release();
-	}, 100 );
+	}, 50 );
 } );
 
 strictEqual( use.done( function( module ) {

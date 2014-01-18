@@ -11,7 +11,7 @@ asyncTest( "hold", 6, function() {
 	window.holdDone = function() {
 		setTimeout( function() {
 			ok( !loaded, "hold delays loading" );
-		}, 200 );
+		}, 50 );
 	};
 	use( "data/hold.js", function( module ) {
 		loaded = true;

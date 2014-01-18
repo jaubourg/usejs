@@ -19,7 +19,7 @@ asyncTest( "bridge", 5, function() {
 			strictEqual( module.getCount(), testCount++, "getCount attached correctly" );
 			start();
 		} );
-	}, 2000 );
+	}, 50 );
 } );
 
 
