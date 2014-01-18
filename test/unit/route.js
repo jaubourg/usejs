@@ -49,7 +49,6 @@ asyncTest( "rewriting", 2, function() {
 
 asyncTest( "rewriting - function", 2, function() {
 	use.route( "moduleFunction:/*", function( _, name ) {
-		console.log( arguments );
 		return "data/" + name +".module.js";
 	} );
 	use( "moduleFunction:/simple", "data/simple.module.js", function( alias, simple ) {
