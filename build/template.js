@@ -8,5 +8,7 @@
  */
 ( function( window, document, undefined ) {
 
+"use strict";
+
 @CODE
 } )( window, document );
