@@ -1,12 +1,16 @@
-var routes = {};
+var routes = {
+	c: {}
+};
+
+var r_route = /([^\/:]+|[\/:]+)/g;
 
 function splitURL( url ) {
 	// First splits into main path and hash
 	url = r_splitURL.exec( url );
 	// Then splits the path into segments (delimited by slashes)
-	var tmp = url[ 1 ].split( "/" );
+	var tmp = url[ 1 ].match( r_route );
 	// If the path ends with a slash, removes the last empty segment
-	if ( !tmp[ tmp.length - 1 ] ) {
+	if ( tmp[ tmp.length - 1 ] === "/" ) {
 		tmp.pop();
 	}
 	return {
@@ -24,12 +28,13 @@ function setRoute( route, target, resolveURL, isDefine ) {
 	var length = route.length;
 	var current = routes;
 	for( ; index < length; index++ ) {
-		current = current[ route[ index ] ] || ( ( current[ route[ index ] ] = {} ) );
+		current = current.c[ route[ index ] ] || ( ( current.c[ route[ index ] ] = {
+			c: {}
+		} ) );
 	}
 	var targetIsAFunction = typeOf( target ) === "function";
 	// Store the target path
-	// (slash is safe because no path part can contain it)
-	current[ "/" ] = isDefine ? {
+	current.v = isDefine ? {
 		// Create the factory function if we don't have it
 		f: targetIsAFunction ? target : function( use ) {
 			use.module( target );
@@ -67,23 +72,23 @@ function _resolveRoute( data, hashes ) {
 	for( index = 0, length = url.length; index < length ; index++ ) {
 		tmp = url[ index ];
 		// If we have a subtree corresponding to the part, goes further down
-		if ( current[ tmp ] ) {
-			current = current[ tmp ];
+		if ( current.c[ tmp ] ) {
+			current = current.c[ tmp ];
 		// If we have a catchall route
-		} else if ( current[ "*" ] ) {
+		} else if ( current.c[ "*" ] ) {
 			// Stores the substitution value
 			stars.push( tmp );
 			// and goes further down
-			current = current[ "*" ];
+			current = current.c[ "*" ];
 		} else {
 			break;
 		}
 	}
 	// If there actually is a route definition
-	if ( ( tmp = current[ "/" ] ) ) {
+	if ( ( tmp = current.v ) ) {
 		// Is this aliasing?
 		if ( tmp.a ) {
-			tmp = splitURL( tmp.r( tmp.a.apply( null, [ url.slice( 0, index ).join( "/" ) ].concat( stars ) ) ) );
+			tmp = splitURL( tmp.r( tmp.a.apply( null, [ url.slice( 0, index ).join( "" ) ].concat( stars ) ) ) );
 			// Replaces the portion we found (handles folders)
 			data.u = url = tmp.u.concat( url.slice( index ) );
 			// Applies substitutions
@@ -100,7 +105,7 @@ function _resolveRoute( data, hashes ) {
 		// Definitions only work with full paths
 		} else if ( index === length ) {
 			// Load the module if not done already
-			if ( !modules[ ( url = url.join( "/" ) ) ] ) {
+			if ( !modules[ ( url = url.join( "" ) ) ] ) {
 				loadModule( url, functionSandbox( tmp.r, function( use ) {
 					tmp.f.apply( this, [ use, url ].concat( stars ) );
 				} ), true );
@@ -113,7 +118,7 @@ function resolveRoute( url, resolveURL ) {
 	url = splitURL( resolveURL( url ) );
 	var hashes = [];
 	_resolveRoute( url, hashes );
-	url = url.u.join( "/" );
+	url = url.u.join( "" );
 	// Handles the hash part (reverse order)
 	if ( hashes.length ) {
 		hashes.reverse();

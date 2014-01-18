@@ -37,10 +37,10 @@ asyncTest( "alias", 1, function() {
 } );
 
 asyncTest( "rewriting", 2, function() {
-	use.route( "module:/*", "data/$(1).module.js" );
-	use( "module:/simple", "data/simple.module.js", function( alias, simple ) {
+	use.route( "module:*", "data/$(1).module.js" );
+	use( "module:simple", "data/simple.module.js", function( alias, simple ) {
 		strictEqual( alias, simple, "rewriting working (1/2)" );
-		use( "module:/complex", "data/complex.module.js", function( alias, complex ) {
+		use( "module:complex", "data/complex.module.js", function( alias, complex ) {
 			strictEqual( alias, complex, "rewriting working (2/2)" );
 			start();
 		} );
@@ -48,12 +48,12 @@ asyncTest( "rewriting", 2, function() {
 } );
 
 asyncTest( "rewriting - function", 2, function() {
-	use.route( "moduleFunction:/*", function( _, name ) {
+	use.route( "moduleFunction:*", function( _, name ) {
 		return "data/" + name +".module.js";
 	} );
-	use( "moduleFunction:/simple", "data/simple.module.js", function( alias, simple ) {
+	use( "moduleFunction:simple", "data/simple.module.js", function( alias, simple ) {
 		strictEqual( alias, simple, "rewriting working (1/2)" );
-		use( "moduleFunction:/complex", "data/complex.module.js", function( alias, complex ) {
+		use( "moduleFunction:complex", "data/complex.module.js", function( alias, complex ) {
 			strictEqual( alias, complex, "rewriting working (2/2)" );
 			start();
 		} );
