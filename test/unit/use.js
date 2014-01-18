@@ -34,10 +34,26 @@ asyncTest( "complex", 5, function() {
 	} );
 } );
 
+asyncTest( "none", 1, function() {
+	use( function() {
+		strictEqual( arguments.length, 0, "called back with no argument" );
+		start();
+	} )
+} );
+
+
 asyncTest( "multiple", 2, function() {
 	use( "data/simple.module.js", "data/complex.module.js", function( simple, complex ) {
 		strictEqual( simple.getCount(), testCount++, "simple count ok" );
 		strictEqual( complex.getDoubleCount(), ( testCount++ ) * 2, "double count ok" );
+		start();
+	} );
+} );
+
+asyncTest( "multiple - array", 2, function() {
+	use( [ "data/simple.module.js", "data/complex.module.js" ], function( modules ) {
+		strictEqual( modules[ 0 ].getCount(), testCount++, "simple count ok" );
+		strictEqual( modules[ 1 ].getDoubleCount(), ( testCount++ ) * 2, "double count ok" );
 		start();
 	} );
 } );

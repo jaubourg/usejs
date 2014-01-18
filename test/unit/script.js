@@ -1,11 +1,12 @@
 module( "script" );
 
 asyncTest( "script", 5, function() {
+	window.TEST = 0;
 	strictEqual( use.script( "data/script1.js", "data/script2.js", function() {
-		strictEqual( window.TEST, "hello world", "global set properly" );
-		window.TEST = "boom";
+		strictEqual( window.TEST, 9, "global set properly" );
+		window.TEST = 0;
 		use.script( "data/script1.js", "data/script2.js", function() {
-			strictEqual( window.TEST, "boom", "global not reset" );
+			strictEqual( window.TEST, 0, "global not reset" );
 			window.TEST = undefined;
 			try {
 				delete window.TEST;

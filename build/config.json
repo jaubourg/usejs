@@ -7,6 +7,7 @@
 		"sandboxes": "iframe, function and script sandboxing logic",
 		"resolve_url": "Resolve URL factory",
 		"module": "Module and loading facility",
+		"text": "Text loading",
 		"script": "Script loading",
 		"route": "Routing system",
 		"use": "Use factory (with function and bridge sandboxing logic)",

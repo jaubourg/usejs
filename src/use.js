@@ -1,27 +1,47 @@
-function useFactory( resolveURL, future, returnCallback ) {
-	function use() {
-		var args = arguments;
-		var futures = [];
-		var index = args.length;
-		var callback = index && typeOf( args[ index - 1 ] ) === "function" && args[ ( --index ) ];
-		var count = index;
-		return hold( function( release ) {
+function useFactory( resolveURL, future ) {
+	function loaderFactory( load ) {
+		function main( urls, callback ) {
+			var values = [];
+			var index = urls.length || 0;
+			var count = index + 1;
+			function done() {
+				if ( !( ( --count ) ) ) {
+					callback( values );
+				}
+			}
 			function set( i ) {
 				return function( value ) {
-					futures[ i ] = value;
-					if ( !( ( --count ) ) ) {
-						if ( callback ) {
-							later( callback, futures );
-						}
-						later( release );
-					}
+					values[ i ] = value;
+					done();
 				};
 			}
 			while( index-- ) {
-				loadModule( resolveRoute( args[ index ], resolveURL ), iframeSandbox ).g( set( index ) );
+				if ( typeof( urls[ index ] ) === "object" ) {
+					main( urls[ index ], set( index ) )
+				} else {
+					load( resolveRoute( urls[ index ], resolveURL ), set( index ) );
+				}
 			}
-		} );
+			done();
+		}
+		return function() {
+			var urls = arguments;
+			var length = urls.length;
+			var callback = length && typeOf( urls[ length - 1 ] ) === "function" && urls[ ( --length ) ];
+			urls = [].slice.call( urls, 0, length )
+			return hold( function( release ) {
+				main( urls, function( values ) {
+					if ( callback ) {
+						later( callback, values );
+					}
+					later( release );
+				} );
+			} );
+		}
 	}
+	var use = loaderFactory( function( url, callback ) {
+		return loadModule( url, iframeSandbox ).g( callback );
+	} );
 	var module = Module( use );
 	var hold;
 	var release;
@@ -31,6 +51,9 @@ function useFactory( resolveURL, future, returnCallback ) {
 			setRoute( route, urlOrFunction, resolveURL, isDefine );
 		} );
 	}
+	var text = function( url, callback ) {
+		loadText( resolveURL( url ), callback );
+	};
 	extend( use, {
 		"bridge": keyValueFunction( use, function( url, filter ) {
 			if ( filter && typeOf( filter ) !== "function" ) {
@@ -57,28 +80,16 @@ function useFactory( resolveURL, future, returnCallback ) {
 			} );
 			return use;
 		} ) ),
-		"script": function() {
-			var args = arguments;
-			var length = args.length;
-			var callback = length && typeOf( args[ length - 1 ] ) === "function" && args[ ( --length ) ];
-			return hold( function( release ) {
-				( function iterate( index ) {
-					if ( index < length ) {
-						loadScript( resolveRoute( args[ index ], resolveURL ), function() {
-							iterate( index + 1 );
-						});
-					} else {
-						if ( callback ) {
-							later( callback );
-						}
-						later( release );
-					}
-				} )( 0 );
+		"json": loaderFactory( function( url, callback ) {
+			loadText( url, function( text ) {
+				callback( new Function( "return " + text + ";" )() );
 			} );
-		},
+		} ),
 		"module": module.v,
 		"resolve": resolveURL,
 		"route": routeFactory( 0 ),
+		"script": loaderFactory( loadScript ),
+		"text": loaderFactory( loadText ),
 		"type": typeOf
 	} );
 	use.route.define = routeFactory( 1 );
