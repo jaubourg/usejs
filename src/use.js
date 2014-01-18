@@ -57,7 +57,7 @@ function useFactory( resolveURL, future, returnCallback ) {
 			} );
 			return use;
 		} ) ),
-		"js": function() {
+		"script": function() {
 			var args = arguments;
 			var length = args.length;
 			var callback = length && typeOf( args[ length - 1 ] ) === "function" && args[ ( --length ) ];

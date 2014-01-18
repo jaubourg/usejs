@@ -3,7 +3,7 @@
 	"use": "base usage for use",
 	"hold": "holding module loading",
 	"module": "test module setting inside the module script",
-	"js": "pure javascript loading",
+	"script": "pure javascript loading",
 	"bridge": "test plain script bridging",
 	"route": "test 'routing' system",
 	"done": "global synchro"
