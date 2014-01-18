@@ -8,10 +8,10 @@ function scriptSandbox( resolveURL, filter ) {
 
 function functionSandbox( resolveURL, filter ) {
 	return function( _, init ) {
-		var sandbox = {};
-		var done = init( sandbox, resolveURL );
+		var tmp = {};
+		var done = init( tmp, resolveURL );
 		if ( filter ) {
-			filter.call( sandbox, sandbox[ "use" ] );
+			filter.call( {}, tmp[ "use" ] );
 		}
 		done();
 	};

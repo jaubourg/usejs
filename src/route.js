@@ -15,7 +15,7 @@ function splitURL( url ) {
 	};
 }
 
-function setRoute( route, urlOrFunction, resolveURL ) {
+function setRoute( route, target, resolveURL, isDefine ) {
 	// Splits the route and ignore the hash
 	route = splitURL( resolveURL( route ) ).u;
 	// Creates the routing structure
@@ -26,21 +26,24 @@ function setRoute( route, urlOrFunction, resolveURL ) {
 	for( ; index < length; index++ ) {
 		current = current[ route[ index ] ] || ( ( current[ route[ index ] ] = {} ) );
 	}
+	var targetIsAFunction = typeOf( target ) === "function";
 	// Store the target path
 	// (slash is safe because no path part can contain it)
-	current[ "/" ] =
-		// Is target a function?
-		( typeOf( urlOrFunction ) === "function" ) ? {
-			// We have a function
-			f: urlOrFunction,
-			// Keep track of how to resolve URLs
-			r: resolveURL,
-			// Let's prepare a map of already resolved routes
-			e: {}
-		} :
-			// Store the URL otherwize
-			splitURL( resolveURL( urlOrFunction ) )
-		;
+	current[ "/" ] = isDefine ? {
+		// Create the factory function if we don't have it
+		f: targetIsAFunction ? target : function( use ) {
+			use.module( target );
+		},
+		// Keep track of how to resolve URLs
+		r: resolveURL
+	} : {
+		// Create the aliasing function if we don't have one
+		a: targetIsAFunction ? target : function() {
+			return target;
+		},
+		// Keep track of how to resolve URLs
+		r: resolveURL
+	};
 }
 
 // This is outside of the _resolveRoute closure
@@ -78,33 +81,30 @@ function _resolveRoute( data, hashes ) {
 	}
 	// If there actually is a route definition
 	if ( ( tmp = current[ "/" ] ) ) {
-		// Is target a url or a function?
-		if ( tmp.f ) {
-			// Only full paths work here
-			if ( index === length ) {
-				url = url.join( "/" );
-				// Load the module if not done already (handles stars)
-				if ( !tmp.e[ url ] ) {
-					tmp.e[ url ] = true;
-					loadModule( url, functionSandbox( tmp.r, function( use ) {
-						tmp.f.apply( this, [ use ].concat( stars ) );
-					} ), true );
-				}
-			}
-		} else {
+		// Is this aliasing?
+		if ( tmp.a ) {
+			tmp = splitURL( tmp.r( tmp.a.apply( null, [ url.slice( 0, index ).join( "/" ) ].concat( stars ) ) ) );
 			// Replaces the portion we found (handles folders)
 			data.u = url = tmp.u.concat( url.slice( index ) );
 			// Applies substitutions
 			for ( index = 0, length = tmp.u.length; index < length; index++ ) {
 				url[ index ] = url[ index ].replace( r_star, function( _, $1, $2 ) {
-					return "" + stars[ ( $1 || $2 ) - 1 ];
+					return stars[ ( $1 || $2 ) - 1 ];
 				} );
 			}
-			stars = undefined;
 			// Stores the corresponding hash
 			data.h = tmp.h;
 			// Attempts to resolve again (to handle recursive definitions)
 			_resolveRoute( data, hashes );
+
+		// Definitions only work with full paths
+		} else if ( index === length ) {
+			// Load the module if not done already
+			if ( !modules[ ( url = url.join( "/" ) ) ] ) {
+				loadModule( url, functionSandbox( tmp.r, function( use ) {
+					tmp.f.apply( this, [ use, url ].concat( stars ) );
+				} ), true );
+			}
 		}
 	}
 }

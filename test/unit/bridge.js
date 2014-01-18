@@ -1,10 +1,9 @@
 module( "bridge" );
 
-asyncTest( "bridge", 6, function() {
+asyncTest( "bridge", 5, function() {
 	var loaded = false;
 	strictEqual( use.bridge( "data/script.js", function( use ) {
 		loaded = true;
-		strictEqual( this.use, use, "this contains use" );
 		use( "data/simple.module.js#getCount", function( getCount ) {
 			use.expose( {
 				getCount: getCount,

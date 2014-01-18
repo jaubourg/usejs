@@ -26,6 +26,11 @@ function useFactory( resolveURL, future, returnCallback ) {
 	var hold;
 	var release;
 	var count = 0;
+	function routeFactory( isDefine ) {
+		return keyValueFunction( use, function( route, urlOrFunction ) {
+			setRoute( route, urlOrFunction, resolveURL, isDefine );
+		} );
+	}
 	extend( use, {
 		"bridge": keyValueFunction( use, function( url, filter ) {
 			if ( filter && typeOf( filter ) !== "function" ) {
@@ -73,11 +78,10 @@ function useFactory( resolveURL, future, returnCallback ) {
 		},
 		"module": module.v,
 		"resolve": resolveURL,
-		"route": keyValueFunction( use, function( route, urlOrFunction ) {
-			setRoute( route, urlOrFunction, resolveURL );
-		} ),
+		"route": routeFactory( 0 ),
 		"type": typeOf
 	} );
+	use.route.define = routeFactory( 1 );
 	hold( function( r ) {
 		release = r;
 	} );
