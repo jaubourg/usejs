@@ -9,10 +9,6 @@ __usejs__ has been tested in Internet Explorer (6 to 9), Chrome (latest), Firefo
 
 # Getting the library
 
-## Download the library
-
-* __0.2.0__ - [Minified](http://dl.dropbox.com/u/17147445/usejs/0.2.0/use.min.js) - [Development](http://dl.dropbox.com/u/17147445/usejs/0.2.0/use.js)
-
 ## Build the library
 
 * Clone this repository
