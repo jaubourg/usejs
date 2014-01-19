@@ -73,54 +73,90 @@ function _resolveRoute( data, hashes ) {
 	if ( data.h ) {
 		hashes.push( data.h );
 	}
-	var stars;
-	var url = data.u;
-	var current = routes;
-	var index = 0;
-	var length = url.length;
-	var tmp;
-	stars = [];
+
+	var paths = {
+		0: {
+			r: routes,
+			s: []
+		}
+	};
+	var nbPaths = 1;
+
+	function addPath( route, stars, starSegment ) {
+		if ( route ) {
+			paths[ nbPaths++ ] = {
+				r: route,
+				s: starSegment ? stars.concat( [ starSegment ] ) : stars
+			}
+		}
+		return !route;
+	}
+
+	var shorterPaths = [];
+
+	var current, previousPaths, pathLength, urlLength, pathIndex, tmp, url;
+
 	// Explores the route structure
-	for( index = 0, length = url.length; index < length ; index++ ) {
-		tmp = url[ index ];
-		// If we have a subtree corresponding to the part, goes further down
-		if ( current.c[ tmp ] ) {
-			current = current.c[ tmp ];
-		// If we have a catchall route
-		} else if ( current.c[ "*" ] ) {
-			// Stores the substitution value
-			stars.push( tmp );
-			// and goes further down
-			current = current.c[ "*" ];
-		} else {
+	for( url = data.u, pathLength = 0, urlLength = url.length; nbPaths && pathLength < urlLength ; pathLength++ ) {
+		tmp = url[ pathLength ];
+		previousPaths = paths;
+		paths = {};
+		nbPaths = 0;
+		for ( pathIndex in previousPaths ) {
+			current = previousPaths[ pathIndex ];
+			// If we have a subtree corresponding to the part, goes further down
+			pathIndex = addPath( current.r.c[ tmp ], current.s );
+			// If we have a catchall route
+			pathIndex = addPath( current.r.c[ "*" ], current.s, tmp ) && pathIndex;
+			// If nothing, keep track in the shorter paths
+			if ( pathIndex === true && current.r.v ) {
+				current.l = pathLength;
+				shorterPaths.push( current );
+			}
+		}
+	}
+	current = undefined;
+	for( pathIndex in paths ) {
+		if ( paths[ pathIndex ].r.v ) {
+			current = paths[ pathIndex ];
 			break;
 		}
 	}
-	// If there actually is a route definition
-	if ( ( tmp = current.v ) ) {
-		// Is this aliasing?
-		if ( tmp.a ) {
-			tmp = splitURL( tmp.r( tmp.a.apply( null, [ url.slice( 0, index ).join( "" ) ].concat( stars ) ) ) );
-			// Replaces the portion we found (handles folders)
-			data.u = url = tmp.u.concat( url.slice( index ) );
-			// Applies substitutions
-			for ( index = 0, length = tmp.u.length; index < length; index++ ) {
-				url[ index ] = url[ index ].replace( r_star, function( _, $1, $2 ) {
-					return stars[ ( $1 || $2 ) - 1 ];
-				} );
-			}
-			// Stores the corresponding hash
-			data.h = tmp.h;
-			// Attempts to resolve again (to handle recursive definitions)
-			_resolveRoute( data, hashes );
+	if ( current ) {
+		pathLength = urlLength;
+	} else if ( shorterPaths.length ) {
+		current = shorterPaths.pop();
+		pathLength = current.l;
+	}
+	if ( current ) {
+		var stars = current.s;
+		current = current.r;
+		// If there actually is a route definition
+		if ( ( tmp = current.v ) ) {
+			// Is this aliasing?
+			if ( tmp.a ) {
+				tmp = splitURL( tmp.r( tmp.a.apply( null, [ url.slice( 0, pathLength ).join( "" ) ].concat( stars ) ) ) );
+				// Replaces the portion we found (handles folders)
+				data.u = url = tmp.u.concat( url.slice( pathLength ) );
+				// Applies substitutions
+				for ( pathLength = 0, urlLength = tmp.u.length; pathLength < urlLength; pathLength++ ) {
+					url[ pathLength ] = url[ pathLength ].replace( r_star, function( _, $1, $2 ) {
+						return stars[ ( $1 || $2 ) - 1 ];
+					} );
+				}
+				// Stores the corresponding hash
+				data.h = tmp.h;
+				// Attempts to resolve again (to handle recursive definitions)
+				_resolveRoute( data, hashes );
 
-		// Definitions only work with full paths
-		} else if ( index === length ) {
-			// Load the module if not done already
-			if ( !modules[ ( url = url.join( "" ) ) ] ) {
-				loadModule( url, functionSandbox( tmp.r, function( use ) {
-					tmp.f.apply( this, [ use, url ].concat( stars ) );
-				} ), true );
+			// Definitions only work with full paths
+			} else if ( pathLength === urlLength ) {
+				// Load the module if not done already
+				if ( !modules[ ( url = url.join( "" ) ) ] ) {
+					loadModule( url, functionSandbox( tmp.r, function( use ) {
+						tmp.f.apply( this, [ use, url ].concat( stars ) );
+					} ), true );
+				}
 			}
 		}
 	}

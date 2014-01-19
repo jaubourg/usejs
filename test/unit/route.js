@@ -157,7 +157,7 @@ asyncTest( "define - function - rewriting", 5, function() {
 	} );
 } );
 
-asyncTest( "recursive", 8, function() {
+asyncTest( "recursive & ambiguous", 8, function() {
 	function define( expr, numberOfCalls ) {
 		use.route.define( expr, function( use, url ) {
 			ok( ( numberOfCalls-- ) > 0, "'" + expr + "' define called for '" + url + "'" );
