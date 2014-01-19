@@ -7,7 +7,7 @@ function loadScript( url, callback, parent ) {
 			script.text = text;
 			add( script, parent );
 			parent.removeChild( script );
-			callback();
+			callback( url );
 		} );
 	} else {
 		( scripts[ url ] || ( ( scripts[ url ] = Future(function( future ) {
