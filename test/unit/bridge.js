@@ -21,5 +21,3 @@ asyncTest( "bridge", 5, function() {
 		} );
 	}, 50 );
 } );
-
-
