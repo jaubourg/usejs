@@ -28,16 +28,20 @@ function setRoute( route, target, resolveURL, isDefine ) {
 	var length = route.length;
 	var current = routes;
 	var recursive;
-	for( ; index < length; index++ ) {
-		if ( route[ index ] === "**" ) {
-			recursive = current;
-			route[ index ] = "*";
-		}
-		current = current.c[ route[ index ] ] || ( ( current.c[ route[ index ] ] = {
+	function forward( expr ) {
+		current = current.c[ expr ] || ( ( current.c[ expr ] = {
 			c: {}
 		} ) );
-		if ( recursive ) {
+	}
+	for( ; index < length; index++ ) {
+		if ( route[ index ] === "**" ) {
+			forward( "*" );
+			forward( "/" );
+			recursive = current;
+			forward( "*" );
 			current.c[ "/" ] = recursive;
+		} else {
+			forward( route[ index ] );
 		}
 	}
 	var targetIsAFunction = typeOf( target ) === "function";

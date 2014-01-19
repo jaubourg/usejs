@@ -157,18 +157,26 @@ asyncTest( "define - function - rewriting", 5, function() {
 	} );
 } );
 
-asyncTest( "recursive", 4, function() {
-	use.route.define( "recurse:**", function( use, url, hello, world ) {
-		ok( true, "define called (1/2)" );
-		use.module( hello + " " + world );
-	} );
-	use.route.define( "recurse:oh/**/god", function( use ) {
-		ok( true, "define called (2/2)" );
-		use.module( [].slice.call( arguments, 2 ).join( " " ) );
-	} );
-	use( "recurse:hello/world", "recurse:oh/my/fracking/god", function( value1, value2 ) {
-		strictEqual( value1, "hello world", "segments properly given (1/2)" );
-		strictEqual( value2, "my fracking", "segments properly given (2/2)" );
+asyncTest( "recursive", 8, function() {
+	function define( expr, numberOfCalls ) {
+		use.route.define( expr, function( use, url ) {
+			ok( ( numberOfCalls-- ) > 0, "'" + expr + "' define called for '" + url + "'" );
+			use.module( [].slice.call( arguments, 2 ).join( " " ) );
+		} );
+	}
+	define( "recurse:**", 2 );
+	define( "recurse:oh/**/god", 1 );
+	define( "recurse:oh/heh", 1 );
+	use(
+		"recurse:hello/world",
+		"recurse:oh/my/fracking/god",
+		"recurse:oh/my/fracking/heh",
+		"recurse:oh/heh",
+	function( value1, value2, value3, value4 ) {
+		strictEqual( value1, "hello world", "segments properly given (1/4)" );
+		strictEqual( value2, "my fracking", "segments properly given (2/4)" );
+		strictEqual( value3, "oh my fracking heh", "segments properly given (3/4)" );
+		strictEqual( value4, "", "segments properly given (4/4)" );
 		start();
 	} );
 } );
