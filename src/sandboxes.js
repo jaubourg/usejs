@@ -1,8 +1,20 @@
 function scriptSandbox( resolveURL, filter ) {
 	return function( url, init ) {
-		loadScript( url, function() {
+/*		loadScript( url, function() {
 			functionSandbox( resolveURL, filter )( url, init );
-		} );
+		} );*/
+		functionSandbox( resolveURL, function( use ) {
+			filter.call( this, use, function( callback ) {
+				return use.hold( function( release ) {
+					loadScript( url, function() {
+						if ( callback ) {
+							later( callback );
+						}
+						later( release );
+					} );
+				} );
+			} );
+		} )( url, init );
 	};
 }
 
