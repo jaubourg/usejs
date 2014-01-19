@@ -93,9 +93,8 @@ function _resolveRoute( data, hashes ) {
 		return !route;
 	}
 
-	var shorterPaths = [];
-
-	var current, previousPaths, pathIndex, pathLength, previousPaths, segment, url, urlLength;
+	var current, previousPaths, pathIndex, pathLength, previousPaths, segment, shorterPath, shorterPathForLength,
+		stars, url, urlLength;
 
 	// Explores the route structure
 	for( url = data.u, pathLength = 0, urlLength = url.length; nbPaths && pathLength < urlLength ; pathLength++ ) {
@@ -103,6 +102,7 @@ function _resolveRoute( data, hashes ) {
 		previousPaths = paths;
 		paths = {};
 		nbPaths = 0;
+		shorterPathForLength = undefined;
 		for ( pathIndex in previousPaths ) {
 			current = previousPaths[ pathIndex ];
 			// If we have a subtree corresponding to the part, goes further down
@@ -110,20 +110,22 @@ function _resolveRoute( data, hashes ) {
 			// If we have a catchall route
 			pathIndex = addPath( current.r.c[ "*" ], current.s, segment ) && pathIndex;
 			// If nothing, keep track in the shorter paths
-			if ( pathIndex === true && current.r.v ) {
-				shorterPaths.push( current );
+			if ( pathIndex && current.r.v && !shorterPathForLength ) {
+				shorterPathForLength = current;
 			}
+		}
+		if ( shorterPathForLength ) {
+			shorterPath = shorterPathForLength;
 		}
 	}
 	current = undefined;
 	for( pathIndex in paths ) {
-		if ( paths[ pathIndex ].r.v ) {
+		if ( paths[ pathIndex ].r.v && ( !current || current.s.length > paths[ pathIndex ].s.length ) ) {
 			current = paths[ pathIndex ];
-			break;
 		}
 	}
-	if ( ( current = current || shorterPaths.pop() ) ) {
-		var stars = current.s;
+	if ( ( current = current || shorterPath ) ) {
+		stars = current.s;
 		pathLength = current.l;
 		current = current.r;
 		// If there actually is a route definition
