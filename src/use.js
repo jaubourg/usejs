@@ -1,5 +1,5 @@
 function useFactory( resolveURL, future ) {
-	function loaderFactory( load ) {
+	function loaderFactory( load, filter ) {
 		function main( urls, callback ) {
 			var values = [];
 			var index = urls.length || 0;
@@ -11,7 +11,7 @@ function useFactory( resolveURL, future ) {
 			}
 			function set( i ) {
 				return function( value ) {
-					values[ i ] = value;
+					values[ i ] = filter ? filter( value ) : value;
 					done();
 				};
 			}
@@ -56,9 +56,6 @@ function useFactory( resolveURL, future ) {
 	};
 	extend( use, {
 		"bridge": keyValueFunction( use, function( url, filter ) {
-			if ( filter && typeOf( filter ) !== "function" ) {
-				filter = undefined;
-			}
 			loadModule( resolveRoute( url, resolveURL ), scriptSandbox( resolveURL, filter ), true );
 		} ),
 		"done": function( callback ) {
@@ -80,10 +77,8 @@ function useFactory( resolveURL, future ) {
 			} );
 			return use;
 		} ) ),
-		"json": loaderFactory( function( url, callback ) {
-			loadText( url, function( text ) {
-				callback( new Function( "return " + text + ";" )() );
-			} );
+		"json": loaderFactory( text, function( text ) {
+			return new Function( "return " + text + ";" )();
 		} ),
 		"module": module.v,
 		"resolve": resolveURL,
