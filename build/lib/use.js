@@ -1,5 +1,25 @@
 "use strict";
 
+var waiting;
+
+function install() {
+	var modules = waiting.modules;
+	var callbacks = waiting.callbacks;
+	waiting = undefined;
+	var names = modules.map( function( module ) {
+		return module.name + "@" + module.version;
+	} );
+	console.log( "Installing " + names.join( " & " ) + "..." );
+	require( "child_process" ).exec( "npm install " + names.join( " " ), function( error ) {
+		if ( error ) {
+			throw error;
+		}
+		callbacks.forEach( function( callback ) {
+			callback();
+		} );
+	} );
+}
+
 module.exports = function( modules, callback ) {
 	modules = modules.split( " " ).map( function( string ) {
 		string = string.split( "@" );
@@ -18,15 +38,14 @@ module.exports = function( modules, callback ) {
 	try {
 		done();
 	} catch ( e ) {
-		var names = modules.map( function( module ) {
-			return module.name + "@" + module.version;
-		} );
-		console.log( "Installing " + names.join( " & " ) + "..." );
-		require( "child_process" ).exec( "npm install " + names.join( " " ), function( error ) {
-			if ( error ) {
-				throw error;
-			}
-			done();
-		} );
+		if ( !waiting ) {
+			waiting = {
+				modules: [],
+				callbacks: []
+			};
+			setTimeout( install )
+		}
+		[].push.apply( waiting.modules, modules );
+		waiting.callbacks.push( done );
 	}
 };

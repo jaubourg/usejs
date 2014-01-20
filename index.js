@@ -3,6 +3,7 @@
 process.chdir( __dirname );
 
 var fs = require( "./build/lib/fs" );
+var parallel = require( "./build/lib/parallel" );
 var use = require( "./build/lib/use" );
 
 var build = require( "./build/build" )( fs.read );
@@ -17,27 +18,25 @@ var config = require( "./build/config.json" );
 var fullText = build( "./build/templates/full.js", config.version, config.modules, "src/%%.js" );
 
 // Lint stuff
-( function doLint( linters, callback, hasErrors ) {
-
-	var linterName = linters.pop();
-
-	if ( !linterName ) {
-		return !hasErrors && callback();
-	}
-
-	console.log( "\nLinting with " + linterName );
-
-	require( "./build/lib/" + linterName )( config[ linterName ], function( linter ) {
-
-		config.lintDirectories.forEach( function( path ) {
-			( path === "src" ? [ fullText ] : fs.dir( path, /\.js$/ ) ).forEach( function( file ) {
-				hasErrors = !linter( path, file ) || hasErrors;
+parallel( [ "jshint", "jscs" ].map( function( linterName ) {
+	var passes = true;
+	return function( callback ) {
+		require( "./build/lib/" + linterName )( config[ linterName ], function( linter ) {
+			console.log( "\nLinting with " + linterName + "..." );
+			config.lintDirectories.forEach( function( path ) {
+				( path === "src" ? [ fullText ] : fs.dir( path, /\.js$/ ) ).forEach( function( file ) {
+					passes = linter( path, file ) && passes;
+				} );
 			} );
+			callback( passes );
 		} );
-		doLint( linters, callback, hasErrors );
-	} );
+	};
+} ) )( function( passes ) {
 
-} )( [ "jshint", "jscs" ], function() {
+	if ( !passes[ 0 ] || !passes[ 1 ] ) {
+		console.log( "\nLINTING FAILED!" );
+		return;
+	}
 
 	console.log( "\nGenerating files..." );
 

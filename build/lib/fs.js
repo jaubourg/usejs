@@ -1,10 +1,14 @@
 "use strict";
 
 var fs = require( "fs" );
+var path = require( "path" );
+
+var fileCache = {};
 
 module.exports = {
 	read: function( file ) {
-		return fs.readFileSync( file ) + "";
+		file = path.resolve( file );
+		return fileCache[ file ] || ( fileCache[ file ] = fs.readFileSync( file ) + "" );
 	},
 	write: function( file, content ) {
 		fs.writeFileSync( file, content );
