@@ -51,7 +51,7 @@
 	}
 
 	// LOAD INIT
-	
+
 	loadScript( "init.js" );
 
 	// LOAD UNIT TESTS
