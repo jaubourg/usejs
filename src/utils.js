@@ -1,11 +1,12 @@
-var r_type = / |\]/;
+var R_TYPE = / |\]/;
 var types = {};
 var toString = types.toString;
 
 function typeOf( value ) {
-	return ( value == undefined ) ?
+	return ( value == null ) ?
 		types[ value ] || ( ( types[ value ] = "" + value ) ) :
-		types[ ( ( value = toString.call( value ) ) ) ] || ( ( types[ value ] = value.split( r_type )[ 1 ].toLowerCase() ) );
+		types[ ( ( value = toString.call( value ) ) ) ] ||
+			( ( types[ value ] = value.split( R_TYPE )[ 1 ].toLowerCase() ) );
 }
 
 function error( msg ) {

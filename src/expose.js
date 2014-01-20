@@ -1,5 +1,5 @@
 // Creates the main use object
-var tmp = useFactory( resolveURL, Future() );
+var tmp = useFactory( resolveURL, createFuture() );
 
 // Exposes it as a global
 window.use = tmp.u;

@@ -3,7 +3,7 @@
 // It can be locked at some point in which case the value cannot be changed through
 // the Module instance interface (you can still go dirty on the underlying object).
 // self is the context of the methods (enables chaining).
-function Module( self ) {
+function createModule( self ) {
 	var object = {},
 		locked;
 	return {
@@ -30,7 +30,7 @@ function Module( self ) {
 		// and is non-null and non-undefined: in that case
 		// throws an exception if module is locked
 		v: function( newObject ) {
-			if ( newObject != undefined ) {
+			if ( newObject != null ) {
 				if ( locked ) {
 					error( "set after init" );
 				}
@@ -45,20 +45,19 @@ function Module( self ) {
 	};
 }
 
-var r_splitURL = /^(.*?)(?:#(.*))?$/,
-	modules = {},
-	push = [].push;
+var R_SPLIT_URL = /^(.*?)(?:#(.*))?$/,
+	modules = {};
 
 // Loads a module using the specified sandbox system (iframe, function, ...).
 // Caching is handled using Futures. If delayed is true, then the Future will
 // be "on demand" and no action will be immediately taken.
 function loadModule( url, sandBox, delayed ) {
 	var future;
-	var hash = r_splitURL.exec( url );
+	var hash = R_SPLIT_URL.exec( url );
 	url = hash[ 1 ];
 	hash = hash[ 2 ];
 	future = modules[ url ] ||
-		( ( modules[ url ] = Future( function( future ) {
+		( ( modules[ url ] = createFuture( function( future ) {
 				sandBox( url, function( win, resolveURL ) {
 					var tmp = useFactory( resolveURL, future );
 					win.use = tmp.u;

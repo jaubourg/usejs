@@ -1,1 +1,3 @@
-$.dependentLoaded = true;
+"use strict";
+
+window.$.dependentLoaded = true;

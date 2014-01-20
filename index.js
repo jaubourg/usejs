@@ -1,58 +1,46 @@
-var fs = require( "fs" );
+"use strict";
 
 process.chdir( __dirname );
 
-// Utilities
-function read( file ) {
-	console.log( "Reading " + file + "..." );
-	return fs.readFileSync( file ) + ""
-}
+var fs = require( "./build/lib/fs" );
+var use = require( "./build/lib/use" );
 
-function write( file, content ) {
-	fs.writeFileSync( file, content );
-	console.log( file + " done!" );
-}
-
-function use( names, callback ) {
-	names = names.split( " " );
-	function done() {
-		callback.apply( null, names.map( function( name ) {
-			return require( name.split( "@" )[ 0 ] );
-		} ) );
-	}
-	try {
-		return done();
-	} catch ( e ) {}
-	console.log( "Installing " + names.join( " & " ) + "..." );
-	require( "child_process" ).exec( "npm install " + names.join( " " ), function( error ) {
-		if ( error ) {
-			throw error;
-		}
-		done();
-	} );
-}
-
-var build = require( "./build/build" )( read );
+var build = require( "./build/build" )( fs.read );
 
 // Ensure the dist directory exists
-try {
-	fs.rmdirSync( "dist" );
-} catch( _ ) {}
-
-try {
-	fs.mkdirSync( "dist" );
-} catch( _ ) {}
+fs.mkdir( "./dist/" );
 
 // Get the config
-var config = JSON.parse( read( "build/config.json" ) );
+var config = JSON.parse( fs.read( "build/config.json" ) );
 
 // Generate the full text script
-var fullText = build( "build/template.js", config.version, config.modules, "src/%%.js" );
+var fullText = build( "build/templates/full.js", config.version, config.modules, "src/%%.js" );
 
-// Let's install some packages
-use( "uglify-js@2.4.x jshint@2.4.x", function( uglify, jshint ) {
-	write( "dist/use.js", fullText );
-	write( "dist/use.min.js", build( "build/template.min.js", config.version, uglify.minify( fullText, {
-		fromString: true
-	} ).code ) );
+// jsHint
+require( "./build/lib/jshint" )( config.jshint, function( jshint ) {
+
+	var passed = true;
+
+	Object.keys( config.jshint ).forEach( function( path ) {
+		if ( path !== "*" ) {
+			( path === "src" ? [ fullText ] : fs.dir( path, /\.js$/ ) ).forEach( function( file ) {
+				passed = jshint( path, file ) && passed;
+			} );
+		}
+	} );
+
+	if ( passed ) {
+
+		fs.write( "dist/use.js", fullText.code );
+
+		use( "uglify-js@2.4.x", function( uglify ) {
+			fs.write( "dist/use.min.js", build( "build/templates/min.js", config.version,
+				uglify.minify( fullText.code, {
+					fromString: true
+				} ).code )
+			);
+		} );
+
+	}
+
 } );

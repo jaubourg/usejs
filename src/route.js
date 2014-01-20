@@ -2,13 +2,13 @@ var routes = {
 	c: {}
 };
 
-var r_route = /([^\/:]+|[\/:]+)/g;
+var R_ROUTE = /([^\/:]+|[\/:]+)/g;
 
 function splitURL( url ) {
 	// First splits into main path and hash
-	url = r_splitURL.exec( url );
+	url = R_SPLIT_URL.exec( url );
 	// Then splits the path into segments (delimited by slashes)
-	var tmp = url[ 1 ].match( r_route );
+	var tmp = url[ 1 ].match( R_ROUTE );
 	// If the path ends with a slash, removes the last empty segment
 	if ( tmp[ tmp.length - 1 ] === "/" ) {
 		tmp.pop();
@@ -65,7 +65,7 @@ function setRoute( route, target, resolveURL, isDefine ) {
 
 // This is outside of the _resolveRoute closure
 // to save memory (and gain some speed in IE)
-var r_star = /\$\(([0-9]+)\)|^\$([0-9]+)$/g;
+var R_STAR = /\$\(([0-9]+)\)|^\$([0-9]+)$/g;
 
 // Recursively resolves routes
 function _resolveRoute( data, hashes ) {
@@ -88,13 +88,17 @@ function _resolveRoute( data, hashes ) {
 				r: route,
 				l: pathLength + 1,
 				s: starSegment ? stars.concat( [ starSegment ] ) : stars
-			}
+			};
 		}
 		return !route;
 	}
 
-	var current, previousPaths, pathIndex, pathLength, previousPaths, segment, shorterPath, shorterPathForLength,
-		stars, url, urlLength;
+	function fStar( _, $1, $2 ) {
+		return stars[ ( $1 || $2 ) - 1 ];
+	}
+
+	var current, pathIndex, pathLength, previousPaths, segment, shorterPath, shorterPathForLength, stars, url,
+		urlLength;
 
 	// Explores the route structure
 	for( url = data.u, pathLength = 0, urlLength = url.length; nbPaths && pathLength < urlLength ; pathLength++ ) {
@@ -132,14 +136,13 @@ function _resolveRoute( data, hashes ) {
 		if ( ( current = current.v ) ) {
 			// Is this aliasing?
 			if ( current.a ) {
-				current = splitURL( current.r( current.a.apply( null, [ url.slice( 0, pathLength ).join( "" ) ].concat( stars ) ) ) );
+				current = splitURL( current.r( current.a.apply( null,
+					[ url.slice( 0, pathLength ).join( "" ) ].concat( stars ) ) ) );
 				// Replaces the portion we found (handles folders)
 				data.u = url = current.u.concat( url.slice( pathLength ) );
 				// Applies substitutions
 				for ( pathLength = 0, urlLength = url.length; pathLength < urlLength; pathLength++ ) {
-					url[ pathLength ] = url[ pathLength ].replace( r_star, function( _, $1, $2 ) {
-						return stars[ ( $1 || $2 ) - 1 ];
-					} );
+					url[ pathLength ] = url[ pathLength ].replace( R_STAR, fStar );
 				}
 				// Stores the corresponding hash
 				data.h = current.h;

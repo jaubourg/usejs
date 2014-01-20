@@ -10,7 +10,7 @@ function loadScript( url, callback, parent ) {
 			callback( url );
 		} );
 	} else {
-		( scripts[ url ] || ( ( scripts[ url ] = Future(function( future ) {
+		( scripts[ url ] || ( ( scripts[ url ] = createFuture(function( future ) {
 			loadScript( url, future.s, documentElement );
 		} ) ) ) ).g( callback );
 	}

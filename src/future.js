@@ -3,7 +3,7 @@
 // and before the constructor returns, unless onDemand is true, in which
 // case init is called during the first call to future.g, effectively
 // making the actual retrieval of the value "on demand".
-function Future( init, onDemand ) {
+function createFuture( init, onDemand ) {
 	var callbacks = [];
 	var values;
 	var future = {
@@ -38,7 +38,7 @@ function Future( init, onDemand ) {
 		// Filter the value: returns a new Future which value
 		// will be equal to fn( currentFuture.value )
 		f: function( fn ) {
-			return Future( function( filtered ) {
+			return createFuture( function( filtered ) {
 				future.g( function( value ) {
 					filtered.s( fn( value ) );
 				} );

@@ -1,3 +1,5 @@
+"use strict";
+
 module( "bridge" );
 
 asyncTest( "bridge", 5, function() {
@@ -8,7 +10,7 @@ asyncTest( "bridge", 5, function() {
 			use( "data/simple.module.js#getCount", function( getCount ) {
 				use.expose( {
 					getCount: getCount,
-					method: $.noConflict().twice
+					method: window.$.noConflict().twice
 				} );
 			} );
 		} );
@@ -18,7 +20,7 @@ asyncTest( "bridge", 5, function() {
 		use( "data/script.js", function( module ) {
 			ok( loaded, "define executed" );
 			strictEqual( module.method( 5 ), 10, "method received as module.method" );
-			strictEqual( module.getCount(), testCount++, "getCount attached correctly" );
+			strictEqual( module.getCount(), window.testCount++, "getCount attached correctly" );
 			start();
 		} );
 	}, 50 );
@@ -28,7 +30,7 @@ asyncTest( "bridge - dependency", 3, function() {
 	use.bridge( "data/script-parent.js", function( use, load ) {
 		ok( "true", "parent script bridge called" );
 		load( function() {
-			use.module( $ );
+			use.module( window.$ );
 		} );
 	} );
 	use.bridge( "data/script-dependent.js", function( use, load ) {
@@ -42,7 +44,7 @@ asyncTest( "bridge - dependency", 3, function() {
 		} );
 	} );
 	use( "data/script-dependent.js", function( dependent ) {
-		ok( dependent.done, "Works as intended" )
+		ok( dependent.done, "Works as intended" );
 		start();
 	} );
 } );

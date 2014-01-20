@@ -1,3 +1,5 @@
+"use strict";
+
 module( "route" );
 
 asyncTest( "simple", 2, function() {
@@ -12,15 +14,15 @@ asyncTest( "with hash", 2, function() {
 	use.route( "complex", "../test/data/complex.module.js#getDoubleCount" );
 	use( "data/complex.module.js#getDoubleCount", "complex", function( moduleMethod, redirectMethod ) {
 		strictEqual( moduleMethod, redirectMethod, "proper redirect" );
-		strictEqual( redirectMethod(), ( testCount++ ) * 2, "double count ok" );
+		strictEqual( redirectMethod(), ( window.testCount++ ) * 2, "double count ok" );
 		start();
 	} );
 } );
 
 asyncTest( "recursive", 1, function() {
 	use.route( {
-		recurse_simple: "data/route.recurse.js#simple",
-		recursive: "recurse_simple"
+		"recurse_simple": "data/route.recurse.js#simple",
+		"recursive": "recurse_simple"
 	} );
 	use( "recursive#getCount", "data/simple.module.js", function( getCount, simple ) {
 		strictEqual( getCount, simple.getCount, "hash properly built" );
@@ -132,7 +134,7 @@ asyncTest( "define function", 4, function() {
 		ok( !loaded, "define is not done immediately" );
 		use( "static", function( module ) {
 			ok( loaded, "define executed" );
-			strictEqual( module.getCount(), testCount++, "getCount attached correctly" );
+			strictEqual( module.getCount(), window.testCount++, "getCount attached correctly" );
 			start();
 		} );
 	}, 50 );

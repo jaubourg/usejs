@@ -17,7 +17,7 @@ function useFactory( resolveURL, future ) {
 			}
 			while( index-- ) {
 				if ( typeof( urls[ index ] ) === "object" ) {
-					main( urls[ index ], set( index ) )
+					main( urls[ index ], set( index ) );
 				} else {
 					load( resolveRoute( urls[ index ], resolveURL ), set( index ) );
 				}
@@ -28,7 +28,7 @@ function useFactory( resolveURL, future ) {
 			var urls = arguments;
 			var length = urls.length;
 			var callback = length && typeOf( urls[ length - 1 ] ) === "function" && urls[ ( --length ) ];
-			urls = [].slice.call( urls, 0, length )
+			urls = [].slice.call( urls, 0, length );
 			return hold( function( release ) {
 				main( urls, function( values ) {
 					if ( callback ) {
@@ -37,12 +37,12 @@ function useFactory( resolveURL, future ) {
 					later( release );
 				} );
 			} );
-		}
+		};
 	}
 	var use = loaderFactory( function( url, callback ) {
 		return loadModule( url, iframeSandbox ).g( callback );
 	} );
-	var module = Module( use );
+	var module = createModule( use );
 	var hold;
 	var release;
 	var count = 0;
@@ -78,6 +78,7 @@ function useFactory( resolveURL, future ) {
 			return use;
 		} ) ),
 		"json": loaderFactory( text, function( text ) {
+			/*jshint -W054 */
 			return new Function( "return " + text + ";" )();
 		} ),
 		"module": module.v,

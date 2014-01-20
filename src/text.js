@@ -1,7 +1,7 @@
 var texts = {};
 
 function loadText( url, callback ) {
-	( texts[ url ] || ( texts[ url ] = Future( function( future ) {
+	( texts[ url ] || ( texts[ url ] = createFuture( function( future ) {
 		var xhr = new XMLHttpRequest();
 		xhr.open( "GET", url );
 		xhr.onload = function() {

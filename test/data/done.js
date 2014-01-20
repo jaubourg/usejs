@@ -1,3 +1,5 @@
+"use strict";
+
 var strictEqual = window.top.strictEqual;
 
 use.hold( function( release ) {

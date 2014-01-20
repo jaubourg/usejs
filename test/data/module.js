@@ -1,3 +1,5 @@
+"use strict";
+
 use.module( function() {
 	return use.module()._data;
 } );

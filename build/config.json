@@ -1,5 +1,6 @@
 {
 	"version": "0.3.0pre",
+
 	"modules": {
 		"utils": "General utilities",
 		"dom": "DOM manipulation shortcuts",
@@ -12,5 +13,73 @@
 		"route": "Routing system",
 		"use": "Use factory (with function and bridge sandboxing logic)",
 		"expose": "main use function exposition as a global"
+	},
+
+	"jshint": {
+
+		"*": {
+			"bitwise": true,
+			"curly": true,
+			"eqeqeq": true,
+			"eqnull": true,
+			"es3": true,
+			"expr": true,
+			"freeze": true,
+			"globalstrict": true,
+			"immed": true,
+			"latedef": true,
+			"noarg": true,
+			"noempty": true,
+			"nonew": true,
+			"strict": true,
+			"undef": true,
+			"unused": true,
+
+			"camelcase": true,
+			"maxlen": 120,
+			"newcap": true,
+			"quotmark": "double",
+			"trailing": true
+		},
+
+		".": {
+			"node": true
+		},
+
+		"src": {
+			"browser": true
+		},
+
+		"build": {
+			"node": true
+		},
+
+		"build/lib": {
+			"node": true
+		},
+
+		"test": {
+			"browser": true
+		},
+
+		"test/data": {
+			"browser": true,
+			"globals": {
+				"use": true
+			}
+		},
+
+		"test/unit": {
+			"browser": true,
+			"globals": {
+				"use": true,
+
+				"asyncTest": true,
+				"module": true,
+				"ok": true,
+				"start": true,
+				"strictEqual": true
+			}
+		}
 	}
 }

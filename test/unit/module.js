@@ -1,3 +1,5 @@
+"use strict";
+
 module( "module" );
 
 asyncTest( "module", 1, function() {

@@ -1,5 +1,10 @@
 ( function() {
 
+	/* jshint -W054 */
+	/* jshint -W060 */
+
+	"use strict";
+
 	// UTILITIES
 
 	function loadScript( url ) {
@@ -14,7 +19,7 @@
 	}
 
 	function getJSON( url ) {
-		return new Function( "return " + getText( url ) +";" )()
+		return new Function( "return " + getText( url ) +";" )();
 	}
 
 	// LOAD QUNIT
@@ -36,7 +41,8 @@
 		default:
 			( function() {
 				var config = getJSON( "../build/config.json" );
-				var dist = getJSON( "../build/build.js" )( getText )( "../build/template.js", config.version, config.modules, "../src/%%.js" );
+				var dist = getJSON( "../build/build.js" )( getText )
+					( "../build/templates/full.js", config.version, config.modules, "../src/%%.js").code;
 				document.write( "<script>//<!--\n" + dist + "\n//--></script>" );
 			} )();
 	}
@@ -47,6 +53,7 @@
 		loadScript( "unit/" + unit + ".js" );
 	}
 
-} )();
+	// Init for tests
+	window.testCount = 0;
 
-var testCount = 0;
+} )();

@@ -23,13 +23,13 @@ function functionSandbox( resolveURL, filter ) {
 		var tmp = {};
 		var done = init( tmp, resolveURL );
 		if ( filter ) {
-			filter.call( {}, tmp[ "use" ] );
+			filter.call( {}, tmp.use );
 		}
 		done();
 	};
 }
 
-var r_directory = /[^\/]+$/;
+var R_DIRECTORY = /[^\/]+$/;
 
 function iframeSandbox( url, init ) {
 	var win, doc, head, base, onload;
@@ -41,7 +41,7 @@ function iframeSandbox( url, init ) {
 	onload = init( win, resolveURLFactory( doc ) );
 	doc.close();
 	base = create( "base", doc );
-	base.href = url.replace( r_directory, "" );
+	base.href = url.replace( R_DIRECTORY, "" );
 	add( base, ( ( head = get( "head", doc )[ 0 ] ) ) );
 	loadScript( url, onload, head );
 }

@@ -1,3 +1,5 @@
+"use strict";
+
 window.TEST += 3;
 
-ok( true, "script1.js loaded" );
+window.ok( true, "script1.js loaded" );
