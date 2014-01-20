@@ -1,8 +1,5 @@
 function scriptSandbox( resolveURL, filter ) {
 	return function( url, init ) {
-/*		loadScript( url, function() {
-			functionSandbox( resolveURL, filter )( url, init );
-		} );*/
 		functionSandbox( resolveURL, function( use ) {
 			filter.call( this, use, function( callback ) {
 				return use.hold( function( release ) {

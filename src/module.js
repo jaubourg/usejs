@@ -45,8 +45,8 @@ function createModule( self ) {
 	};
 }
 
-var R_SPLIT_URL = /^(.*?)(?:#(.*))?$/,
-	modules = {};
+var R_SPLIT_URL = /^(.*?)(?:#(.*))?$/;
+var modules = {};
 
 // Loads a module using the specified sandbox system (iframe, function, ...).
 // Caching is handled using Futures. If delayed is true, then the Future will
