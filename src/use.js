@@ -78,13 +78,12 @@ function useFactory( resolveURL, future ) {
 			return use;
 		} ) ),
 		"json": loaderFactory( text, function( text ) {
-			/*jshint -W054 */
+			/* jshint -W054 */
 			return new Function( "return " + text + ";" )();
 		} ),
 		"module": module.v,
 		"resolve": resolveURL,
 		"route": routeFactory( 0 ),
-		"script": loaderFactory( loadScript ),
 		"text": loaderFactory( loadText ),
 		"type": typeOf
 	} );
