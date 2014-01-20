@@ -39,6 +39,8 @@ var fullText = build( "./build/templates/full.js", config.version, config.module
 
 } )( [ "jshint", "jscs" ], function() {
 
+	console.log( "\nGenerating files..." );
+
 	fs.write( "./dist/use.js", fullText.code );
 
 	require( "./build/lib/minify" )( function( min ) {

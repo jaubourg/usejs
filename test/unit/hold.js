@@ -21,7 +21,7 @@ asyncTest( "hold", 6, function() {
 		for ( var key in expected ) {
 			strictEqual( module[ key ], expected[ key ], "exposed field " + key + " equals " + expected[ key ] );
 		}
-		window.holdDone = undefined;
+		window.unregisterGlobal( "holdDone" );
 		start();
 	} );
 } );

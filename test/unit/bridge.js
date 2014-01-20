@@ -21,6 +21,7 @@ asyncTest( "bridge", 5, function() {
 			ok( loaded, "define executed" );
 			strictEqual( module.method( 5 ), 10, "method received as module.method" );
 			strictEqual( module.getCount(), window.testCount++, "getCount attached correctly" );
+			window.unregisterGlobal( "$" );
 			start();
 		} );
 	}, 50 );
@@ -45,6 +46,7 @@ asyncTest( "bridge - dependency", 3, function() {
 	} );
 	use( "data/script-dependent.js", function( dependent ) {
 		ok( dependent.done, "Works as intended" );
+		window.unregisterGlobal( "$" );
 		start();
 	} );
 } );
