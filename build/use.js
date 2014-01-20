@@ -43,7 +43,7 @@ module.exports = function( modules, callback ) {
 				modules: [],
 				callbacks: []
 			};
-			setTimeout( install )
+			setTimeout( install );
 		}
 		[].push.apply( waiting.modules, modules );
 		waiting.callbacks.push( done );
