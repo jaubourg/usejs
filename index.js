@@ -44,7 +44,7 @@ var fullText = build( "./build/templates/full.js", config.version, config.module
 	use( "uglify-js@2.4.x", function( uglify ) {
 		fs.write( "./dist/use.min.js", build( "./build/templates/min.js", config.version, uglify.minify( fullText.code, {
 			fromString: true
-		} ).code ) );
+		} ).code).code );
 	} );
 
 } );
