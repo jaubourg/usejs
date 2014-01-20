@@ -23,7 +23,7 @@ function keyValueFunction( self, fn ) {
 	return function( key, value ) {
 		if ( arguments.length < 2 ) {
 			value = key;
-			for( key in value ) {
+			for ( key in value ) {
 				fn( key, value[ key ] );
 			}
 		} else {
@@ -34,7 +34,7 @@ function keyValueFunction( self, fn ) {
 }
 
 function extend( target, src ) {
-	for( var key in src ) {
+	for (  var key in src ) {
 		target[ key ] = src[ key ];
 	}
 }

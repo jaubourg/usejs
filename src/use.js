@@ -15,7 +15,7 @@ function useFactory( resolveURL, future ) {
 					done();
 				};
 			}
-			while( index-- ) {
+			while ( index-- ) {
 				if ( typeof( urls[ index ] ) === "object" ) {
 					main( urls[ index ], set( index ) );
 				} else {

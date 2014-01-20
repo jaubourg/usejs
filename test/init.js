@@ -8,7 +8,7 @@
 	// UTILITIES
 
 	function loadScript( url ) {
-		document.write( "<script src='" + url +"'></script>\n" );
+		document.write( "<script src='" + url + "'></script>\n" );
 	}
 
 	function getText( url ) {
@@ -19,7 +19,7 @@
 	}
 
 	function getJSON( url ) {
-		return new Function( "return " + getText( url ) +";" )();
+		return new Function( "return " + getText( url ) + ";" )();
 	}
 
 	// LOAD QUNIT
@@ -31,25 +31,28 @@
 
 	var hash = document.location.hash + "";
 
-	switch( hash ) {
-		case "#dist":
+	switch ( hash ) {
+		case "#dist": {
 			loadScript( "../dist/use.js" );
 			break;
-		case "#min":
+		}
+		case "#min": {
 			loadScript( "../dist/use.min.js" );
 			break;
-		default:
+		}
+		default: {
 			( function() {
 				var config = getJSON( "../build/config.json" );
 				var dist = getJSON( "../build/build.js" )( getText )
 					( "../build/templates/full.js", config.version, config.modules, "../src/%%.js").code;
 				document.write( "<script>//<!--\n" + dist + "\n//--></script>" );
 			} )();
+		}
 	}
 
 	// LOAD UNIT TESTS
 
-	for( var unit in getJSON( "units.json" ) ) {
+	for ( var unit in getJSON( "units.json" ) ) {
 		loadScript( "unit/" + unit + ".js" );
 	}
 

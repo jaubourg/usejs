@@ -11,36 +11,40 @@ var build = require( "./build/build" )( fs.read );
 fs.mkdir( "./dist/" );
 
 // Get the config
-var config = JSON.parse( fs.read( "build/config.json" ) );
+var config = require( "./build/config.json" );
 
 // Generate the full text script
-var fullText = build( "build/templates/full.js", config.version, config.modules, "src/%%.js" );
+var fullText = build( "./build/templates/full.js", config.version, config.modules, "src/%%.js" );
 
-// jsHint
-require( "./build/lib/jshint" )( config.jshint, function( jshint ) {
+// Lint stuff
+( function doLint( linters, callback, hasErrors ) {
 
-	var passed = true;
+	var linterName = linters.pop();
 
-	Object.keys( config.jshint ).forEach( function( path ) {
-		if ( path !== "*" ) {
+	if ( !linterName ) {
+		return !hasErrors && callback();
+	}
+
+	console.log( "\nLinting with " + linterName );
+
+	require( "./build/lib/" + linterName )( config[ linterName ], function( linter ) {
+
+		config.lintDirectories.forEach( function( path ) {
 			( path === "src" ? [ fullText ] : fs.dir( path, /\.js$/ ) ).forEach( function( file ) {
-				passed = jshint( path, file ) && passed;
+				hasErrors = !linter( path, file ) || hasErrors;
 			} );
-		}
+		} );
+		doLint( linters, callback, hasErrors );
 	} );
 
-	if ( passed ) {
+} )( [ "jshint", "jscs" ], function() {
 
-		fs.write( "dist/use.js", fullText.code );
+	fs.write( "./dist/use.js", fullText.code );
 
-		use( "uglify-js@2.4.x", function( uglify ) {
-			fs.write( "dist/use.min.js", build( "build/templates/min.js", config.version,
-				uglify.minify( fullText.code, {
-					fromString: true
-				} ).code )
-			);
-		} );
-
-	}
+	use( "uglify-js@2.4.x", function( uglify ) {
+		fs.write( "./dist/use.min.js", build( "./build/templates/min.js", config.version, uglify.minify( fullText.code, {
+			fromString: true
+		} ).code ) );
+	} );
 
 } );

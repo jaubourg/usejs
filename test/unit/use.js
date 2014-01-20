@@ -43,7 +43,6 @@ asyncTest( "none", 1, function() {
 	} );
 } );
 
-
 asyncTest( "multiple", 2, function() {
 	use( "data/simple.module.js", "data/complex.module.js", function( simple, complex ) {
 		strictEqual( simple.getCount(), window.testCount++, "simple count ok" );

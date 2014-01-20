@@ -19,7 +19,7 @@ function expose( key ) {
 
 var key;
 
-for( key in exposed ) {
+for ( key in exposed ) {
 	expose( key );
 }
 

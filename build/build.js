@@ -59,7 +59,7 @@
 
 	try {
 		module.exports = buildFactory;
-	} catch( e ) {}
+	} catch ( e ) {}
 
 	return buildFactory;
 

@@ -33,7 +33,7 @@ function setRoute( route, target, resolveURL, isDefine ) {
 			c: {}
 		} ) );
 	}
-	for( ; index < length; index++ ) {
+	for ( ; index < length; index++ ) {
 		if ( route[ index ] === "**" ) {
 			forward( "*" );
 			forward( "/" );
@@ -101,7 +101,7 @@ function _resolveRoute( data, hashes ) {
 		urlLength;
 
 	// Explores the route structure
-	for( url = data.u, pathLength = 0, urlLength = url.length; nbPaths && pathLength < urlLength ; pathLength++ ) {
+	for ( url = data.u, pathLength = 0, urlLength = url.length; nbPaths && pathLength < urlLength ; pathLength++ ) {
 		segment = url[ pathLength ];
 		previousPaths = paths;
 		paths = {};
@@ -123,7 +123,7 @@ function _resolveRoute( data, hashes ) {
 		}
 	}
 	current = undefined;
-	for( pathIndex in paths ) {
+	for ( pathIndex in paths ) {
 		if ( paths[ pathIndex ].r.v && ( !current || current.s.length > paths[ pathIndex ].s.length ) ) {
 			current = paths[ pathIndex ];
 		}
