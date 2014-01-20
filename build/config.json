@@ -15,7 +15,7 @@
 		"expose": "main use function exposition as a global"
 	},
 
-	"lintDirectories": [ ".", "src", "build", "build/lib", "test", "test/data", "test/unit" ],
+	"lintDirectories": [ ".", "src", "build", "test", "test/data", "test/unit" ],
 
 	"jscs": {
 
@@ -192,10 +192,6 @@
 		},
 
 		"build": {
-			"node": true
-		},
-
-		"build/lib": {
 			"node": true
 		},
 

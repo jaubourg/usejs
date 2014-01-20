@@ -2,9 +2,8 @@
 
 process.chdir( __dirname );
 
-var fs = require( "./build/lib/fs" );
-var parallel = require( "./build/lib/parallel" );
-var use = require( "./build/lib/use" );
+var fs = require( "./build/fs" );
+var parallel = require( "./build/parallel" );
 
 var build = require( "./build/build" )( fs.read );
 
@@ -21,7 +20,7 @@ var fullText = build( "./build/templates/full.js", config.version, config.module
 parallel( [ "jshint", "jscs" ].map( function( linterName ) {
 	var passes = true;
 	return function( callback ) {
-		require( "./build/lib/" + linterName )( config[ linterName ], function( linter ) {
+		require( "./build/" + linterName )( config[ linterName ], function( linter ) {
 			console.log( "\nLinting with " + linterName + "..." );
 			config.lintDirectories.forEach( function( path ) {
 				( path === "src" ? [ fullText ] : fs.dir( path, /\.js$/ ) ).forEach( function( file ) {
@@ -42,8 +41,8 @@ parallel( [ "jshint", "jscs" ].map( function( linterName ) {
 
 	fs.write( "./dist/use.js", fullText.code );
 
-	require( "./build/lib/minify" )( function( min ) {
-		fs.write( "./dist/use.min.js", build( "./build/templates/min.js", config.version, min( fullText.code )).code );
+	require( "./build/minify" )( function( min ) {
+		fs.write( "./dist/use.min.js", build( "./build/templates/min.js", config.version, min( fullText.code ) ).code );
 	} );
 
 } );
