@@ -41,10 +41,8 @@ var fullText = build( "./build/templates/full.js", config.version, config.module
 
 	fs.write( "./dist/use.js", fullText.code );
 
-	use( "uglify-js@2.4.x", function( uglify ) {
-		fs.write( "./dist/use.min.js", build( "./build/templates/min.js", config.version, uglify.minify( fullText.code, {
-			fromString: true
-		} ).code).code );
+	require( "./build/lib/minify" )( function( min ) {
+		fs.write( "./dist/use.min.js", build( "./build/templates/min.js", config.version, min( fullText.code )).code );
 	} );
 
 } );
