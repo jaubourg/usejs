@@ -50,20 +50,14 @@
 		}
 	}
 
+	// LOAD INIT
+	
+	loadScript( "init.js" );
+
 	// LOAD UNIT TESTS
 
 	for ( var unit in getJSON( "units.json" ) ) {
 		loadScript( "unit/" + unit + ".js" );
 	}
-
-	// Init for tests
-	window.testCount = 0;
-
-	window.unregisterGlobal = function( name ) {
-		window[ name ] = undefined;
-		try {
-			delete window[ name ];
-		} catch ( e ) {}
-	};
 
 } )();
