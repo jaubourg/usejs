@@ -16,7 +16,7 @@ function error( msg ) {
 function later( fn, args ) {
 	return setTimeout( function() {
 		fn.apply( undefined, args || [] );
-	}, 0 );
+	} );
 }
 
 function keyValueFunction( self, fn ) {
