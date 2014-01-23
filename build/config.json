@@ -1,21 +1,15 @@
 {
+	"name": "use-js",
+
 	"version": "0.3.0pre",
+	"author": "Julian Aubourg <j@ubourg.net>",
 
-	"modules": {
-		"utils": "General utilities",
-		"dom": "DOM manipulation shortcuts",
-		"future": "Futures",
-		"sandboxes": "iframe, function and script sandboxing logic",
-		"resolve_url": "Resolve URL factory",
-		"module": "Module and loading facility",
-		"text": "Text loading",
-		"script": "Script loading",
-		"route": "Routing system",
-		"use": "Use factory (with function and bridge sandboxing logic)",
-		"expose": "main use function exposition as a global"
+	"dist": "dist",
+
+	"lint": {
+		"jscs": "build build/** test test/**",
+		"jshint": "build build/** test test/**"
 	},
-
-	"lintDirectories": [ ".", "src", "build", "test", "test/data", "test/unit" ],
 
 	"jscs": {
 

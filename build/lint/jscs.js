@@ -1,9 +1,9 @@
 "use strict";
 
-var linterFactory = require( "./linterFactory" );
-var use = require( "./use" );
+var factory = require( "./factory" );
+var use = require( "./../util/use" );
 
-module.exports = linterFactory( function( callback ) {
+module.exports = factory( function( callback ) {
 	use( "jscs|node_modules/jscs/lib/string-checker@1.2.x", function( JSCS ) {
 		callback( function( code, config ) {
 			var jscs = new JSCS();

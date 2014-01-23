@@ -1,2 +1,0 @@
-// usejs v@VERSION
-@CODE

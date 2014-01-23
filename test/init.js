@@ -1,10 +1,14 @@
-"use strict";
+( function() {
 
-window.testCount = 0;
+	"use strict";
 
-window.unregisterGlobal = function( name ) {
-	window[ name ] = undefined;
-	try {
-		delete window[ name ];
-	} catch ( e ) {}
-};
+	window.testCount = 0;
+
+	window.unregisterGlobal = function( name ) {
+		window[ name ] = undefined;
+		try {
+			delete window[ name ];
+		} catch ( e ) {}
+	};
+
+} )();

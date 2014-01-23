@@ -2,31 +2,36 @@
 
 process.chdir( __dirname );
 
-var fs = require( "./build/fs" );
-var parallel = require( "./build/parallel" );
+var fs = require( "./build/io/fs" );
+var parallel = require( "./build/util/parallel" );
 
-var build = require( "./build/build" )( fs.read );
+// Get the config
+var now = new Date();
+var config = require( "./build/config.json" );
+config.date = now;
+config.year = now.getFullYear();
+
+var includeFile = require( "./build/io/includeFile" )( config );
 
 // Ensure the dist directory exists
 fs.mkdir( "./dist/" );
 
-// Get the config
-var config = require( "./build/config.json" );
-
 // Generate the full text script
-var fullText = build( "./build/templates/full.js", config.version, config.modules, "src/%%.js" );
+var distDir = "./" + config.dist + "/";
+var fullText = includeFile( "./build/dist/" + config.name +".js" );
 
 // Lint stuff
 parallel( [ "jshint", "jscs" ].map( function( linterName ) {
 	var passes = true;
 	return function( callback ) {
-		require( "./build/" + linterName )( config[ linterName ], function( linter ) {
-			console.log( "\nLinting with " + linterName + "..." );
+		require( "./build/lint/" + linterName )( config[ linterName ], function( linter ) {
+			passes = linter( fullText ) && passes;
+			/* console.log( "\nLinting with " + linterName + "..." );
 			config.lintDirectories.forEach( function( path ) {
 				( path === "src" ? [ fullText ] : fs.dir( path, /\.js$/ ) ).forEach( function( file ) {
 					passes = linter( path, file ) && passes;
 				} );
-			} );
+			} );*/
 			callback( passes );
 		} );
 	};
@@ -34,15 +39,13 @@ parallel( [ "jshint", "jscs" ].map( function( linterName ) {
 
 	if ( !passes[ 0 ] || !passes[ 1 ] ) {
 		console.log( "\nLINTING FAILED!" );
-		return;
+		//return;
 	}
 
-	console.log( "\nGenerating files..." );
+	fs.write( distDir + config.name + ".js", fullText.content );
 
-	fs.write( "./dist/use.js", fullText.code );
-
-	require( "./build/minify" )( function( min ) {
-		fs.write( "./dist/use.min.js", build( "./build/templates/min.js", config.version, min( fullText.code ) ).code );
+	require( "./build/util/use" )( "uglify-js@2.4.x", function() {
+		fs.write( distDir + config.name + ".min.js", includeFile( "./build/dist/"  + config.name + ".min.js").content );
 	} );
 
 } );

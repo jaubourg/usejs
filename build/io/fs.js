@@ -3,15 +3,22 @@
 var fs = require( "fs" );
 var path = require( "path" );
 
-var fileCache = {};
+var cache = require( "./../util/cache" )( {
+	get: function( file ) {
+		return fs.readFileSync( file ) + "";
+	},
+	set: function( file, content ) {
+		fs.writeFileSync( file, content );
+		return content;
+	}
+} );
 
 module.exports = {
 	read: function( file ) {
-		file = path.resolve( file );
-		return fileCache[ file ] || ( fileCache[ file ] = fs.readFileSync( file ) + "" );
+		return cache( path.resolve( file ) );
 	},
 	write: function( file, content ) {
-		fs.writeFileSync( file, content );
+		cache( path.resolve( file ), content );
 		console.log( file + " written" );
 	},
 	mkdir: function( dir ) {
